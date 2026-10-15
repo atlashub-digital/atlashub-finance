@@ -93,6 +93,7 @@ The first real-money step is the E7 pilot (`docs/41`).
   node dist/admin-cli.js replay-event <event-id>
   ```
 - **Provider incident**: set the account `status` to `disabled` in `atlashub.providers.json` and re-apply → routing skips it and fails over; no deploy needed.
+- **Catalog ownership (V1)**: `infra/projects/<slug>/` in this repo is canonical. ARO operations validate, `sync-project` and issue keys; project teams only receive offer codes, entitlement keys and runtime keys. No cross-repo catalog pipelines before E7.
 - **Price / offer change**: edit `aro.project.yaml`, review, `validate`, then `sync-project`. Each sync stores the manifest verbatim in `aro_catalog_revision`; a changed amount creates a new `catalog_price` row and retires the old one; offers removed from the manifest are retired, never deleted.
 - **Key rotation**: `issue-key` the new key, roll it to the project, then `revoke-key <prefix>`.
 - **Exceptions to watch** (`aro_payment_attempt."errorCode"`): `AMOUNT_MISMATCH` (provider paid a different amount; no grant), `DUPLICATE_PAYMENT` (two providers confirmed one order; refund one manually), `UNKNOWN` state older than a few minutes (ambiguous create not yet resolved).

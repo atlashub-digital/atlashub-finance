@@ -1,5 +1,5 @@
 # EspelhoMeu desired commerce configuration (catalog-first).
-# Canonical home: the EspelhoMeu repo. Kept here for the pilot until that repo adopts it.
+# V1: this file in the ARO repo is the canonical catalog (owned by ARO operations).
 # Prices: docs/13_ESPELHOMEU_PILOT.md. Jornada and Membership stay unregistered until fulfillment is ready.
 version: "1"
 

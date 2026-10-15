@@ -11,8 +11,11 @@ import { tenantId } from "./manifests.js";
 /**
  * Catalog-first sync (docs/developer/PROJECT_COMMERCE_BOOTSTRAP.md).
  *
- *   project repo aro.project.yaml   → desired catalog (products, offers, fulfillment)
- *   infra/projects/<slug>.config.json → ARO-side integration (tenant, origins, webhook)
+ * V1 operating rule: the ARO repo is the catalog source of truth; project
+ * repos only consume offer codes and entitlement keys.
+ *
+ *   infra/projects/<slug>/aro.project.yaml → desired catalog (products, offers, fulfillment)
+ *   infra/projects/<slug>/aro.config.json  → ARO-side integration (tenant, origins, webhook)
  *   sync → AtlasHub catalog_product / catalog_price + aro_offer + revision record
  *
  * Checkout then accepts only registered offer codes; the DB snapshot is the
