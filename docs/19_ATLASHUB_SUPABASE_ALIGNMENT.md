@@ -244,13 +244,11 @@ ARO-specific additions may include:
 
 Do not duplicate the inbox if these fields can be added compatibly.
 
-## Security posture observed
+## Security review boundary
 
-Relevant commerce, billing and CRM tables inspected in AtlasHub have RLS enabled.
+ARO database work must include a private Supabase security-advisor review before production migration.
 
-One separate existing table, `public.waas_migrations`, was reported by Supabase as having RLS disabled.
-
-This is **not an ARO change** and must not be auto-remediated because enabling RLS without policies can block an existing runtime. It should be reviewed separately by AtlasHub infrastructure/security ownership.
+Existing infrastructure findings are intentionally not enumerated in this public repository. They must be handled through AtlasHub infrastructure/security operations, with policy review before any RLS change because enabling RLS without compatible policies can break an active runtime.
 
 Reference:
 https://supabase.com/docs/guides/database/postgres/row-level-security
