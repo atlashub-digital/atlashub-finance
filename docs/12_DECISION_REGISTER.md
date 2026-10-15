@@ -42,3 +42,7 @@
 
 ## ADR-014 — Supabase migration discipline
 **Decision:** no ARO DDL is applied until the existing AtlasHub schema, RLS and project/tenant mapping are reviewed and the additive gap migration is explicit.
+
+
+## ADR-015 — Selective PiXBrasil reuse
+**Decision:** ARO will reuse proven PiXBrasil provider/routing patterns and compatible code where valuable, but will not inherit obsolete authentication or make PiXBrasil the public ARO contract. EspelhoMeu fast launch may use pilot-local implementations while stable components are extracted after production proof.
