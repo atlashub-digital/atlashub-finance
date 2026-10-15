@@ -41,6 +41,11 @@
 37. [Repository Standard](./32_REPOSITORY_STANDARD.md)
 38. [Component Contract Catalog](./33_COMPONENT_CONTRACT_CATALOG.md)
 39. [Master Blueprint](./MASTER_BLUEPRINT.md)
+40. [Project Integration Contract V1](./35_PROJECT_INTEGRATION_CONTRACT_V1.md)
+41. [Hermes Tool Contract V1](./36_HERMES_TOOL_CONTRACT_V1.md)
+42. [Backend Implementation Specification V1](./37_BACKEND_IMPLEMENTATION_SPEC_V1.md)
+43. [ADR-016 — Contract-first Implementation](./ADR-016_CONTRACT_FIRST_IMPLEMENTATION.md)
+44. [OpenAPI V1](../openapi/aro-v1.yaml)
 
 ## Documentation rule
 
