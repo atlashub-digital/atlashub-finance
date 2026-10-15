@@ -76,3 +76,16 @@ ARO becomes the common revenue data plane for:
 - revenue funnel events.
 
 See `docs/ARO_ARCHITECTURE_V1.md`.
+
+
+## Documentation
+
+Start with the canonical index:
+
+- [ARO Documentation Index](./docs/INDEX.md)
+- [Architecture V1](./docs/ARO_ARCHITECTURE_V1.md)
+- [Hermes Finance Operator](./docs/08_HERMES_FINANCE_OPERATOR.md)
+- [Atlas Workforce Revenue Module](./docs/16_ATLAS_WORKFORCE_REVENUE_MODULE.md)
+- [EspelhoMeu Pilot](./docs/13_ESPELHOMEU_PILOT.md)
+
+The repository is the source of truth for ARO architecture, contracts, provider adapters, operating procedures and decision records.
