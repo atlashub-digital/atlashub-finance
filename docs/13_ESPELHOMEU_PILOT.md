@@ -1,5 +1,8 @@
 # EspelhoMeu — ARO Pilot
 
+> Pilot intent. The current integration is the [Golden Reference — EspelhoMeu](./handbook/reference/golden-espelhomeu.md); the execution checklist is [docs/41](./41_ESPELHOMEU_PILOT_EXECUTION.md).
+
+
 ## Objective
 
 Make EspelhoMeu the first production proof of ARO.

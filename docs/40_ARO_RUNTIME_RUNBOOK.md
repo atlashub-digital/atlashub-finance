@@ -95,6 +95,7 @@ The first real-money step is the E7 pilot (`docs/41`).
 - **Provider incident**: set the account `status` to `disabled` in `atlashub.providers.json` and re-apply → routing skips it and fails over; no deploy needed.
 - **Catalog ownership (V1)**: `infra/projects/<slug>/` in this repo is canonical. ARO operations validate, `sync-project` and issue keys; project teams only receive offer codes, entitlement keys and runtime keys. No cross-repo catalog pipelines before E7.
 - **Price / offer change**: edit `aro.project.yaml`, review, `validate`, then `sync-project`. Each sync stores the manifest verbatim in `aro_catalog_revision`; a changed amount creates a new `catalog_price` row and retires the old one; offers removed from the manifest are retired, never deleted.
+- **Refunds**: executed in the provider dashboard; follow [Manual Refund Operations](./handbook/operations/manual-refunds.md) (MisticPay refunds are not observed automatically in V1).
 - **Key rotation**: `issue-key` the new key, roll it to the project, then `revoke-key <prefix>`.
 - **Exceptions to watch** (`aro_payment_attempt."errorCode"`): `AMOUNT_MISMATCH` (provider paid a different amount; no grant), `DUPLICATE_PAYMENT` (two providers confirmed one order; refund one manually), `UNKNOWN` state older than a few minutes (ambiguous create not yet resolved).
 - **MisticPay MED (PIX special return)** events are recorded in `billing_webhook_event` with `normalizedType = PROVIDER_RISK_EVENT` and are not applied automatically in V1.

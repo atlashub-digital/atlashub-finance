@@ -22,7 +22,7 @@
 **Decision:** ARO owns canonical purchase-derived entitlement state/contracts; projects own fulfillment UX.
 
 ## ADR-008 — Supabase
-**Decision:** central AtlasHub Supabase schema `aro` is the preferred data plane; projects integrate by API, not table coupling.
+**Decision:** AtlasHub Supabase is the data plane; projects integrate by API, not table coupling. *(The original "separate `aro` schema" wording is superseded by ADR-013: ARO reuses the existing public AtlasHub tables and adds only `aro_*` orchestration tables.)*
 
 ## ADR-009 — Hermes
 **Decision:** ARO must support a future Hermes Finance/Revenue Operator with continuous analysis and policy-gated actions.
@@ -50,3 +50,16 @@
 
 ## ADR-016 — Contract-first implementation
 **Decision:** ARO implementation is governed by the versioned OpenAPI and project/agent/backend contracts committed in this repository. CODEX, Claude Code, Hermes engineering agents and human developers implement against those contracts. Hermes remains above ARO as an operator/client and is not part of payment confirmation. Project outbound webhooks are signed notifications; canonical entitlement remains resolvable from ARO. Multi-currency is native from V1 using integer minor units plus ISO-4217 currency.
+
+
+## ADR-017 — Hosted checkout on a separate domain
+**Status:** ACCEPTED (direction) — not implemented in V1.
+**Decision:** a future ARO hosted checkout will be served from a domain separate from AtlasHub, preferably under `xpay.expert`, and not from `pay.atlashub.si` or any `atlashub.si` subdomain. The ARO API stays at `aro.atlashub.si`. Rationale and prerequisites: [Hosted Checkout](./handbook/roadmap/hosted-checkout.md).
+
+## ADR-018 — Documentation source of truth and publication
+**Status:** ACCEPTED.
+**Decision:** the repository is the technical source of truth; GitBook only publishes it via Git Sync (`docs/handbook/` public handbook, `docs/` internal engineering space). Contracts are linked, never hand-copied; `npm run docs:check` guards against drift. See [Documentation & Publishing](./handbook/roadmap/documentation-publishing.md).
+
+## ADR-019 — V1 catalog ownership
+**Status:** ACCEPTED.
+**Decision:** for V1, `infra/projects/<project>/aro.project.yaml` + `aro.config.json` in the ARO repository is the central catalog. Project repositories consume offer codes and entitlement keys only; distributed manifests are a post-V1 option.

@@ -4,26 +4,7 @@ Status: **ready for execution after E6**. Nothing here has been run with real mo
 
 ## 1. EspelhoMeu integration (project side)
 
-EspelhoMeu needs only:
-
-```
-ARO_API_URL=https://aro.atlashub.si
-ARO_PROJECT_SLUG=espelhomeu
-ARO_PUBLIC_KEY=aro_pk_…        # browser-safe, origin-allowlisted
-ARO_SERVER_KEY=aro_sk_…        # server only
-ARO_WEBHOOK_SECRET=…           # verifies ARO → EspelhoMeu webhooks
-```
-
-Changes in the EspelhoMeu repository (PR #30 successor):
-
-0. Use the approved offer codes and entitlement keys from `infra/projects/espelhomeu/aro.project.yaml`. In V1 that file in the ARO repo is canonical; EspelhoMeu does not copy, own or sync it (optional, post-V1).
-
-1. Replace provider calls with `POST /v1/checkout-sessions` (see `examples/typescript/aro-checkout-client.ts`). Offer slugs: `p01-br` … `p05-br`, `colecao-br`. Send the payer CPF/CNPJ (PixGo requires it; the QR is locked to that document).
-2. Render the PIX QR from `payment.qr_payload` (unaltered) and show `payment.copy_paste`.
-3. Poll `GET /v1/checkout-sessions/{id}` with `X-ARO-Checkout-Secret`; render the normalized states only.
-4. Add `POST /api/aro/webhook` using `examples/typescript/verify-aro-webhook.ts` (raw body, timestamp tolerance, HMAC, dedupe by `X-ARO-Event-Id`).
-5. Reader/Library gate: call `POST /v1/entitlements/resolve` server-side before serving protected content. Never unlock from the browser return or from the webhook alone.
-6. Remove PixGo/MisticPay/Stripe credentials and provider state machines from the project.
+Catalog, configuration and the project-side implementation checklist are in the [Golden Reference — EspelhoMeu](./handbook/reference/golden-espelhomeu.md).
 
 ## 2. Pilot run (Engineering + Helena)
 

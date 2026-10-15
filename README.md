@@ -78,20 +78,6 @@ ARO becomes the common revenue data plane for:
 See `docs/ARO_ARCHITECTURE_V1.md`.
 
 
-## Documentation
-
-Start with the canonical index:
-
-- [ARO Master Blueprint](./docs/MASTER_BLUEPRINT.md)
-- [ARO Documentation Index](./docs/INDEX.md)
-- [Architecture V1](./docs/ARO_ARCHITECTURE_V1.md)
-- [Hermes Finance Operator](./docs/08_HERMES_FINANCE_OPERATOR.md)
-- [Atlas Workforce Revenue Module](./docs/16_ATLAS_WORKFORCE_REVENUE_MODULE.md)
-- [EspelhoMeu Pilot](./docs/13_ESPELHOMEU_PILOT.md)
-
-The repository is the source of truth for ARO architecture, contracts, provider adapters, operating procedures and decision records.
-
-
 ## Engineering contracts
 
 Implementation must follow the versioned contracts:
@@ -104,30 +90,14 @@ Implementation must follow the versioned contracts:
 Projects integrate with ARO, not provider APIs.
 
 
-## Developer Integration Kit
+## Documentation
 
-For project teams integrating ARO into a digital product, start here:
+| Audience | Start here |
+|---|---|
+| Project developers, partners, ARO operations | [ARO Developer Handbook](./docs/handbook/README.md) (GitBook space, `docs/handbook/`) |
+| AtlasHub engineering (internal) | [Engineering Documentation](./docs/INDEX.md) (GitBook space, `docs/`) |
 
-- [Developer START HERE](./docs/developer/START_HERE.md)
-- [Integration Recipes](./docs/developer/INTEGRATION_RECIPES.md)
-- [Environment Matrix](./docs/developer/ENVIRONMENTS.md)
-- [Acceptance Checklist](./docs/developer/ACCEPTANCE_CHECKLIST.md)
-- [Project Handoff Template](./docs/developer/PROJECT_HANDOFF_TEMPLATE.md)
-- [Standard Team Message](./docs/developer/TEAM_MESSAGE.md)
-
-The OpenAPI remains the canonical API contract:
-- [ARO OpenAPI V1](./openapi/aro-v1.yaml)
-
-
-### Catalog-first project bootstrap
-
-New digital projects should use a versioned `aro.project.yaml` manifest.
-
-References:
-- [Project Commerce Bootstrap](./docs/developer/PROJECT_COMMERCE_BOOTSTRAP.md)
-- [Manifest Schema](./schemas/project-commerce-manifest.schema.json)
-- [Training Platform Example](./examples/manifests/training-platform.yaml)
-- [Telegram Fulfillment](./docs/developer/FULFILLMENT_TELEGRAM.md)
+Contracts: [OpenAPI V1](./openapi/aro-v1.yaml) · [Manifest schema](./schemas/project-commerce-manifest.schema.json). The repository is the source of truth; GitBook publishes it ([Documentation & Publishing](./docs/handbook/roadmap/documentation-publishing.md)).
 
 ## Runtime (ARO V1 backend)
 

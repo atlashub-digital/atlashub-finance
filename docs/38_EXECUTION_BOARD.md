@@ -1,5 +1,7 @@
 # ARO V1 — Execution Board
 
+> **Status (2026-10-15):** E1–E5 and catalog sync accepted; E6 deployed by Infrastructure (pooler hotfix `prepare: false`); E7 EspelhoMeu real PIX proof next; E8 reuse proven in tests (LeveLab price pending). Integrator documentation: [ARO Developer Handbook](./handbook/README.md).
+
 ## Now
 
 ### E1 — Bootstrap API
