@@ -233,6 +233,21 @@ describe.skipIf(!TEST_DATABASE_URL)("ARO checkout → payment → order → enti
     ]);
   });
 
+  it("replay never second-guesses an in-flight create; a stale CREATED attempt is recovered", async () => {
+    const key = randomUUID();
+    const first = await createCheckout(h, checkoutBody(), key);
+    const [a] = await h.sql<{ id: string }[]>`SELECT id FROM aro_payment_attempt WHERE "checkoutSessionId" = ${first.json().id}`;
+    // Simulate a crash/in-flight request: attempt CREATED, session without instruction.
+    await h.sql`UPDATE aro_payment_attempt SET state = 'CREATED', "createdAt" = now() WHERE id = ${a!.id}`;
+    await h.sql`UPDATE aro_checkout_session SET state = 'CREATED', "paymentInstruction" = NULL WHERE id = ${first.json().id}`;
+    const busy = await createCheckout(h, checkoutBody(), key);
+    expect(busy.statusCode).toBe(409);
+    await h.sql`UPDATE aro_payment_attempt SET "createdAt" = now() - interval '5 minutes' WHERE id = ${a!.id}`;
+    const resumed = await createCheckout(h, checkoutBody(), key);
+    expect(resumed.statusCode).toBe(201);
+    expect(resumed.json().payment.copy_paste).toBe(first.json().payment.copy_paste); // same PixGo charge, found by external_id
+  });
+
   it("all providers rejecting yields PROVIDER_REJECTED and a FAILED session; replay returns the same error", async () => {
     h.pixgo.createMode = "reject";
     h.mistic.createMode = "reject";

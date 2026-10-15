@@ -70,6 +70,9 @@ export type CheckoutSessionView = {
   created_at: string;
 };
 
+/** Longer than the provider HTTP timeout (15 s) plus local bookkeeping. */
+const IN_FLIGHT_GRACE_MS = 60_000;
+
 const PROVIDER_FAILURE_STATUS: Record<string, number> = { PROVIDER_UNAVAILABLE: 503, PROVIDER_REJECTED: 422 };
 
 async function loadOffer(db: Db, projectId: string, slug: string) {
@@ -248,6 +251,12 @@ export class CheckoutService {
     const accountOf = (id: string) => accounts.find((a) => a.id === id)!;
 
     // 1. Resolve an ambiguous previous attempt before trying anything else.
+    //    A recent CREATED attempt belongs to a request still talking to the
+    //    provider: never second-guess it (that could open a second live charge).
+    const inFlight = attempts.some(
+      (x) => x.state === "CREATED" && Date.now() - new Date(x.createdAt).getTime() < IN_FLIGHT_GRACE_MS,
+    );
+    if (inFlight) throw new AroError(409, "IDEMPOTENCY_CONFLICT", "Checkout creation already in progress; retry");
     for (const a of attempts.filter((x) => x.state === "UNKNOWN" || x.state === "CREATED")) {
       const acc = accountOf(a.providerAccountId);
       const outcome = await this.recover(a, { providerAccountId: acc.id, provider: acc.provider, credentialRef: acc.credentialRef });

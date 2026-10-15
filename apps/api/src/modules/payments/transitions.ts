@@ -31,6 +31,7 @@ export type AttemptRow = {
   currency: string;
   feeMinor: number | null;
   errorCode: string | null;
+  createdAt: Date;
 };
 
 const LIVE: AttemptState[] = ["CREATED", "UNKNOWN", "PENDING"];
