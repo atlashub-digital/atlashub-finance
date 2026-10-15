@@ -1,0 +1,695 @@
+openapi: 3.1.0
+info:
+  title: Atlas Revenue Operations API
+  version: 1.0.0
+  summary: Shared AtlasHub commerce, payment orchestration and entitlement API
+  description: |
+    ARO is AtlasHub's provider-agnostic Revenue Operations API.
+
+    Projects integrate with ARO, never directly with PixGo, MisticPay or Stripe.
+
+    V1 production path:
+      Project Sales UI -> ARO Checkout -> Payment Router -> Provider
+      -> normalized Payment -> Order -> Entitlement -> Project Fulfillment
+
+    All money values use integer minor units plus ISO-4217 currency codes.
+    Provider-specific payloads never form part of the public project contract.
+servers:
+  - url: https://aro.atlashub.si
+    description: Production
+  - url: https://aro-preview.atlashub.si
+    description: Controlled preview/staging
+tags:
+  - name: System
+  - name: Checkout
+  - name: Entitlements
+  - name: Orders
+  - name: Project Webhooks
+  - name: Provider Webhooks
+  - name: Operator
+
+security: []
+
+paths:
+  /health:
+    get:
+      tags: [System]
+      operationId: getHealth
+      summary: Liveness/readiness summary
+      responses:
+        "200":
+          description: ARO service status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  /v1/checkout-sessions:
+    post:
+      tags: [Checkout]
+      operationId: createCheckoutSession
+      summary: Create an ARO checkout session and initial payment attempt
+      description: |
+        Creates a provider-neutral checkout session for one project offer.
+
+        The project specifies market, currency and payment method.
+        ARO chooses the provider according to routing policy.
+
+        Use Idempotency-Key for every create request.
+      security:
+        - ProjectPublicKey: []
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCheckoutSessionRequest"
+      responses:
+        "201":
+          description: Checkout session created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutSession"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+        "429":
+          $ref: "#/components/responses/RateLimited"
+        "503":
+          $ref: "#/components/responses/Unavailable"
+
+  /v1/checkout-sessions/{checkout_session_id}:
+    get:
+      tags: [Checkout]
+      operationId: getCheckoutSession
+      summary: Read normalized checkout/payment state
+      security:
+        - CheckoutSecret: []
+      parameters:
+        - $ref: "#/components/parameters/CheckoutSessionId"
+      responses:
+        "200":
+          description: Current normalized checkout state
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutSession"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/orders/{order_id}:
+    get:
+      tags: [Orders]
+      operationId: getOrder
+      summary: Read canonical order
+      security:
+        - ProjectServerKey: []
+      parameters:
+        - $ref: "#/components/parameters/OrderId"
+      responses:
+        "200":
+          description: Canonical order
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
+  /v1/entitlements/resolve:
+    post:
+      tags: [Entitlements]
+      operationId: resolveEntitlements
+      summary: Resolve active product rights for a project customer
+      description: |
+        Server-to-server endpoint. Projects use this endpoint as the
+        authoritative access check.
+
+        Outbound webhooks are notifications; this endpoint is authority.
+      security:
+        - ProjectServerKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResolveEntitlementsRequest"
+      responses:
+        "200":
+          description: Active entitlement set
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResolveEntitlementsResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
+  /v1/webhooks/providers/pixgo:
+    post:
+      tags: [Provider Webhooks]
+      operationId: ingestPixGoWebhook
+      summary: PixGo provider webhook ingress
+      description: Provider-specific endpoint. Never called by project applications.
+      responses:
+        "200":
+          description: Event accepted or idempotently ignored
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /v1/webhooks/providers/misticpay:
+    post:
+      tags: [Provider Webhooks]
+      operationId: ingestMisticPayWebhook
+      summary: MisticPay provider webhook ingress
+      description: Provider-specific endpoint. Never called by project applications.
+      responses:
+        "200":
+          description: Event accepted or idempotently ignored
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /v1/webhooks/providers/stripe:
+    post:
+      tags: [Provider Webhooks]
+      operationId: ingestStripeWebhook
+      summary: Stripe provider webhook ingress
+      description: Provider-specific endpoint. Never called by project applications.
+      responses:
+        "200":
+          description: Event accepted or idempotently ignored
+        "400":
+          $ref: "#/components/responses/BadRequest"
+
+  /v1/operator/projects/{project}/revenue/overview:
+    get:
+      tags: [Operator]
+      operationId: getProjectRevenueOverview
+      summary: Read project revenue overview
+      security:
+        - OperatorToken: []
+      parameters:
+        - $ref: "#/components/parameters/ProjectSlug"
+        - name: from
+          in: query
+          schema: { type: string, format: date-time }
+        - name: to
+          in: query
+          schema: { type: string, format: date-time }
+        - name: reporting_currency
+          in: query
+          schema:
+            type: string
+            pattern: "^[A-Z]{3}$"
+      responses:
+        "200":
+          description: Revenue summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RevenueOverview"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+webhooks:
+  projectRevenueEvent:
+    post:
+      summary: ARO outbound event delivered to a project's configured webhook endpoint
+      description: |
+        Optional project integration surface.
+
+        Delivery is at-least-once. Consumers MUST deduplicate using event.id.
+
+        ARO signs the exact raw request body using the project's webhook secret.
+        Signature headers:
+          X-ARO-Event-Id
+          X-ARO-Timestamp
+          X-ARO-Signature: v1=<hex_hmac_sha256>
+
+        Projects must verify timestamp tolerance and HMAC before processing.
+        Webhooks are notifications, not the sole entitlement authority.
+      parameters:
+        - name: X-ARO-Event-Id
+          in: header
+          required: true
+          schema: { type: string }
+        - name: X-ARO-Timestamp
+          in: header
+          required: true
+          schema: { type: string }
+        - name: X-ARO-Signature
+          in: header
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectEvent"
+      responses:
+        "200":
+          description: Event acknowledged
+        "204":
+          description: Event acknowledged with no body
+
+components:
+  securitySchemes:
+    ProjectPublicKey:
+      type: apiKey
+      in: header
+      name: X-ARO-Public-Key
+      description: |
+        Project-scoped publishable checkout key. Safe to use only for
+        explicitly public checkout operations with origin/rate restrictions.
+    ProjectServerKey:
+      type: http
+      scheme: bearer
+      bearerFormat: opaque
+      description: Project-scoped server credential. Never expose in browser code.
+    CheckoutSecret:
+      type: apiKey
+      in: header
+      name: X-ARO-Checkout-Secret
+      description: Opaque secret returned only when a checkout session is created.
+    OperatorToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Atlas WorkForce / operator token with tenant/project scopes.
+
+  parameters:
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+        minLength: 16
+        maxLength: 128
+    CheckoutSessionId:
+      name: checkout_session_id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    OrderId:
+      name: order_id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    ProjectSlug:
+      name: project
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: "^[a-z0-9][a-z0-9-]{1,62}$"
+
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Unauthorized:
+      description: Authentication failed
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Forbidden:
+      description: Authenticated but not permitted
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Conflict:
+      description: Idempotency/state conflict
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Unprocessable:
+      description: Valid request but no valid route/offer/payer state
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    RateLimited:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Unavailable:
+      description: ARO/provider unavailable
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+
+  schemas:
+    Money:
+      type: object
+      required: [amount_minor, currency]
+      properties:
+        amount_minor:
+          type: integer
+          format: int64
+          minimum: 0
+        currency:
+          type: string
+          pattern: "^[A-Z]{3}$"
+          examples: [BRL, EUR, USD]
+
+    Payer:
+      type: object
+      required: [name, email]
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 160
+        email:
+          type: string
+          format: email
+        document:
+          type: string
+          description: Required only when the selected payment rail/provider requires it.
+        phone:
+          type: string
+          maxLength: 32
+        country:
+          type: string
+          pattern: "^[A-Z]{2}$"
+
+    Attribution:
+      type: object
+      additionalProperties: false
+      properties:
+        utm_source: { type: string, maxLength: 128 }
+        utm_medium: { type: string, maxLength: 128 }
+        utm_campaign: { type: string, maxLength: 160 }
+        utm_content: { type: string, maxLength: 160 }
+        utm_term: { type: string, maxLength: 160 }
+        referrer: { type: string, maxLength: 512 }
+
+    CreateCheckoutSessionRequest:
+      type: object
+      required: [project, offer, market, currency, payment_method, payer]
+      properties:
+        project:
+          type: string
+          pattern: "^[a-z0-9][a-z0-9-]{1,62}$"
+        offer:
+          type: string
+          maxLength: 128
+        market:
+          type: string
+          maxLength: 16
+          examples: [BR, EU, US, INTL]
+        country:
+          type: string
+          pattern: "^[A-Z]{2}$"
+        currency:
+          type: string
+          pattern: "^[A-Z]{3}$"
+        payment_method:
+          type: string
+          enum: [PIX, CARD]
+        payer:
+          $ref: "#/components/schemas/Payer"
+        bump_offers:
+          type: array
+          maxItems: 4
+          items: { type: string, maxLength: 128 }
+          default: []
+        attribution:
+          $ref: "#/components/schemas/Attribution"
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          maxProperties: 20
+
+    PaymentInstruction:
+      oneOf:
+        - $ref: "#/components/schemas/PixInstruction"
+        - $ref: "#/components/schemas/CardInstruction"
+      discriminator:
+        propertyName: kind
+
+    PixInstruction:
+      type: object
+      required: [kind, copy_paste, qr_payload, expires_at]
+      properties:
+        kind:
+          const: PIX
+        copy_paste:
+          type: string
+        qr_payload:
+          type: string
+          description: Canonical PIX payload; project may render its own clean QR.
+        expires_at:
+          type: string
+          format: date-time
+
+    CardInstruction:
+      type: object
+      required: [kind]
+      properties:
+        kind:
+          const: CARD
+        client_secret:
+          type: string
+          description: Provider-safe client secret/token where the adapter requires it.
+        redirect_url:
+          type: string
+          format: uri
+
+    CheckoutSession:
+      type: object
+      required:
+        - id
+        - order_id
+        - project
+        - offer
+        - state
+        - amount
+        - checkout_secret
+      properties:
+        id: { type: string, format: uuid }
+        order_id: { type: string, format: uuid }
+        project: { type: string }
+        offer: { type: string }
+        state:
+          type: string
+          enum: [CREATED, PENDING, APPROVED, FAILED, CANCELED, EXPIRED, REFUNDED, CHARGEBACK]
+        amount:
+          $ref: "#/components/schemas/Money"
+        checkout_secret:
+          type: string
+          description: Returned on create; clients must store ephemerally and not log it.
+        payment:
+          $ref: "#/components/schemas/PaymentInstruction"
+        expires_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+
+    OrderItem:
+      type: object
+      required: [offer, product, title, quantity, unit_amount]
+      properties:
+        offer: { type: string }
+        product: { type: string }
+        title: { type: string }
+        quantity: { type: integer, minimum: 1 }
+        unit_amount:
+          $ref: "#/components/schemas/Money"
+
+    Order:
+      type: object
+      required: [id, project, status, amount, items, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        project: { type: string }
+        status:
+          type: string
+          enum: [CREATED, PENDING, APPROVED, CANCELED, REFUNDED, CHARGEBACK]
+        amount:
+          $ref: "#/components/schemas/Money"
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/OrderItem" }
+        customer_id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        approved_at:
+          type: string
+          format: date-time
+
+    ResolveEntitlementsRequest:
+      type: object
+      required: [project]
+      properties:
+        project:
+          type: string
+        customer_id:
+          type: string
+          format: uuid
+        identity:
+          type: object
+          properties:
+            email:
+              type: string
+              format: email
+          description: |
+            Transitional V1 lookup. Prefer canonical customer_id after identity resolution.
+      anyOf:
+        - required: [customer_id]
+        - required: [identity]
+
+    Entitlement:
+      type: object
+      required: [key, status, starts_at]
+      properties:
+        key:
+          type: string
+          examples: ["espelhomeu:p01", "atlas-club:membership"]
+        status:
+          type: string
+          enum: [ACTIVE, REVOKED, EXPIRED]
+        source_order_id:
+          type: string
+          format: uuid
+        starts_at:
+          type: string
+          format: date-time
+        expires_at:
+          type: string
+          format: date-time
+
+    ResolveEntitlementsResponse:
+      type: object
+      required: [project, entitlements]
+      properties:
+        project: { type: string }
+        customer_id:
+          type: string
+          format: uuid
+        entitlements:
+          type: array
+          items: { $ref: "#/components/schemas/Entitlement" }
+
+    ProjectEvent:
+      type: object
+      required: [id, type, created_at, project, data]
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum:
+            - checkout.started
+            - payment.pending
+            - payment.approved
+            - payment.failed
+            - payment.refunded
+            - payment.chargeback
+            - order.approved
+            - entitlement.granted
+            - entitlement.revoked
+        created_at:
+          type: string
+          format: date-time
+        project:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+
+    RevenueOverview:
+      type: object
+      required: [project, period, gross, refunds, net, orders]
+      properties:
+        project: { type: string }
+        period:
+          type: object
+          required: [from, to]
+          properties:
+            from: { type: string, format: date-time }
+            to: { type: string, format: date-time }
+        gross:
+          $ref: "#/components/schemas/Money"
+        refunds:
+          $ref: "#/components/schemas/Money"
+        net:
+          $ref: "#/components/schemas/Money"
+        orders:
+          type: integer
+        approved_orders:
+          type: integer
+        aov:
+          $ref: "#/components/schemas/Money"
+
+    HealthResponse:
+      type: object
+      required: [status, service, version]
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded]
+        service:
+          const: aro-api
+        version:
+          type: string
+        db:
+          type: string
+          enum: [up, down, unknown]
+
+    Error:
+      type: object
+      required: [error, message, request_id]
+      properties:
+        error:
+          type: string
+          enum:
+            - INVALID_REQUEST
+            - INVALID_OFFER
+            - INVALID_PAYER
+            - NO_PAYMENT_ROUTE
+            - PROVIDER_UNAVAILABLE
+            - PROVIDER_REJECTED
+            - PAYMENT_PENDING
+            - PAYMENT_FAILED
+            - CHECKOUT_EXPIRED
+            - ENTITLEMENT_NOT_READY
+            - UNAUTHORIZED
+            - FORBIDDEN
+            - NOT_FOUND
+            - IDEMPOTENCY_CONFLICT
+            - RATE_LIMITED
+            - INTERNAL_ERROR
+        message:
+          type: string
+        request_id:
+          type: string
