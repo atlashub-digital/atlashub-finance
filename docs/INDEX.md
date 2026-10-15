@@ -33,6 +33,14 @@
 29. [LEGO Component Map](./25_LEGO_COMPONENT_MAP.md)
 30. [Provider Adapter Template](./providers/ADAPTER_TEMPLATE.md)
 31. [PiXBrasil Reuse Strategy](./26_PIXBRASIL_REUSE_STRATEGY.md)
+32. [Agentic Operating Model](./27_AGENTIC_OPERATING_MODEL.md)
+33. [Market & Currency Intelligence](./28_MARKET_CURRENCY_INTELLIGENCE.md)
+34. [Future Rails — Blockchain](./29_FUTURE_RAILS_BLOCKCHAIN.md)
+35. [WorkForce Finance Agent UX](./30_WORKFORCE_FINANCE_AGENT_UX.md)
+36. [Engineering Principles](./31_ENGINEERING_PRINCIPLES.md)
+37. [Repository Standard](./32_REPOSITORY_STANDARD.md)
+38. [Component Contract Catalog](./33_COMPONENT_CONTRACT_CATALOG.md)
+39. [Master Blueprint](./MASTER_BLUEPRINT.md)
 
 ## Documentation rule
 
