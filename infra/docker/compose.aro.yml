@@ -1,0 +1,24 @@
+# Compose fragment for the AtlasHub VPS (owned by Helena / Infrastructure).
+# Secrets come from the env file provisioned on the host, never from git.
+services:
+  aro-api:
+    image: ${ARO_IMAGE:-ghcr.io/atlashub-digital/aro-api:latest}
+    restart: unless-stopped
+    env_file:
+      - ${ARO_ENV_FILE:-/etc/atlashub/aro-api.env}
+    environment:
+      NODE_ENV: production
+      PORT: "8080"
+    expose:
+      - "8080"
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - edge
+
+networks:
+  edge:
+    external: true

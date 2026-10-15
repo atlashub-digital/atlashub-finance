@@ -1,0 +1,24 @@
+{
+  "name": "atlashub-finance",
+  "private": true,
+  "description": "ARO — Atlas Revenue Operations",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "openapi:validate": "node scripts/validate-openapi.mjs"
+  },
+  "devDependencies": {
+    "@apidevtools/swagger-parser": "13.1.0",
+    "@types/node": "22.20.5",
+    "typescript": "5.9.3",
+    "vitest": "3.2.7"
+  }
+}
