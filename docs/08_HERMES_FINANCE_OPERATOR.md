@@ -112,3 +112,31 @@ Every agent action stores:
 ## Principle
 
 The agent is an operational finance colleague, not an autonomous treasury.
+
+
+## Phase 0 — notifications before agent runtime
+
+Hermes is **not** required to launch the first payment flow.
+
+Before the full agent exists, ARO/project runtimes may emit low-risk operational notifications directly to approved channels such as Telegram or Discord.
+
+Initial events:
+- payment approved;
+- payment refunded;
+- later: payment exception, reconciliation exception, provider degradation.
+
+This direct notification layer:
+- never decides payment state;
+- never grants/revokes entitlement;
+- never blocks payment processing;
+- contains no payer document or sensitive PII;
+- is a transport sink, not an agent.
+
+When Hermes is introduced, it should consume the same normalized ARO events and add:
+- context;
+- summaries;
+- anomaly explanations;
+- recommended actions;
+- approval requests.
+
+The notification transport remains useful even after Hermes exists because critical operational events should not depend on LLM availability.
