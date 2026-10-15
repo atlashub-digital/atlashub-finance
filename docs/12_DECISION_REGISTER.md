@@ -46,3 +46,7 @@
 
 ## ADR-015 — Selective PiXBrasil reuse
 **Decision:** ARO will reuse proven PiXBrasil provider/routing patterns and compatible code where valuable, but will not inherit obsolete authentication or make PiXBrasil the public ARO contract. EspelhoMeu fast launch may use pilot-local implementations while stable components are extracted after production proof.
+
+
+## ADR-016 — Contract-first implementation
+**Decision:** ARO implementation is governed by the versioned OpenAPI and project/agent/backend contracts committed in this repository. CODEX, Claude Code, Hermes engineering agents and human developers implement against those contracts. Hermes remains above ARO as an operator/client and is not part of payment confirmation. Project outbound webhooks are signed notifications; canonical entitlement remains resolvable from ARO. Multi-currency is native from V1 using integer minor units plus ISO-4217 currency.
