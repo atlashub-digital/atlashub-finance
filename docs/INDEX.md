@@ -19,6 +19,11 @@
 15. [PixGo Adapter Notes](./providers/PIXGO.md)
 16. [MisticPay Adapter Notes](./providers/MISTICPAY.md)
 17. [Stripe Adapter Notes](./providers/STRIPE.md)
+18. [Supabase Schema V1](./14_SUPABASE_SCHEMA_V1.sql)
+19. [API Contracts V1](./15_API_CONTRACTS_V1.md)
+20. [Atlas Workforce Revenue Module](./16_ATLAS_WORKFORCE_REVENUE_MODULE.md)
+21. [Provider Onboarding Checklist](./17_PROVIDER_ONBOARDING_CHECKLIST.md)
+22. [Glossary](./18_GLOSSARY.md)
 
 ## Documentation rule
 
