@@ -82,6 +82,7 @@ See `docs/ARO_ARCHITECTURE_V1.md`.
 
 Start with the canonical index:
 
+- [ARO Master Blueprint](./docs/MASTER_BLUEPRINT.md)
 - [ARO Documentation Index](./docs/INDEX.md)
 - [Architecture V1](./docs/ARO_ARCHITECTURE_V1.md)
 - [Hermes Finance Operator](./docs/08_HERMES_FINANCE_OPERATOR.md)
