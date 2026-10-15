@@ -10,6 +10,10 @@ export function createSql(url: string, opts: { max?: number } = {}): Sql {
     max: opts.max ?? 10,
     idle_timeout: 30,
     connect_timeout: 10,
+    // The Supabase pooler does not reliably keep named prepared statements
+    // across pooled backends; unnamed statements avoid "prepared statement
+    // does not exist" errors in production.
+    prepare: false,
     // bigint (int8) money columns are returned as JS numbers. Minor units stay
     // far below Number.MAX_SAFE_INTEGER (9e15) for any realistic amount; the
     // parser rejects anything unsafe instead of silently losing precision.
