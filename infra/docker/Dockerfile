@@ -15,12 +15,14 @@ COPY apps/api/package.json apps/api/
 RUN npm ci --omit=dev -w @aro/api --include-workspace-root=false
 
 FROM node:22-bookworm-slim
-ENV NODE_ENV=production PORT=8080 ARO_MIGRATIONS_DIR=/app/migrations
+ENV NODE_ENV=production PORT=8080 ARO_MIGRATIONS_DIR=/app/migrations \
+    ARO_MANIFEST_SCHEMA=/app/schemas/project-commerce-manifest.schema.json
 WORKDIR /app
 COPY --from=deps /repo/node_modules ./node_modules
 COPY --from=build /repo/apps/api/dist ./dist
 COPY --from=build /repo/apps/api/package.json ./package.json
 COPY infra/migrations ./migrations
+COPY schemas ./schemas
 USER node
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \

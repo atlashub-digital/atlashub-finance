@@ -1,0 +1,4 @@
+{
+  "tenant": "atlashub",
+  "project": { "slug": "levelab", "allowed_origins": [] }
+}

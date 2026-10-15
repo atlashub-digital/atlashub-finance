@@ -1,0 +1,10 @@
+{
+  "$comment": "ARO-side integration settings (Infrastructure-owned). Catalog lives in aro.project.yaml.",
+  "tenant": "atlashub",
+  "project": {
+    "slug": "espelhomeu",
+    "allowed_origins": ["https://espelho.lia.doctor"],
+    "webhook_url": "https://espelho.lia.doctor/api/aro/webhook",
+    "webhook_secret_ref": "aro/espelhomeu/webhook"
+  }
+}

@@ -1,0 +1,28 @@
+# Atlas Club reuse proof (E8). Price from atlashub-club src/lib/offers.ts (decision issue #14, 2026-10-14).
+# Charging stays off until atlashub-club PR2C is approved: do not issue a public key before that.
+# The student price (R$190) needs eligibility review and is intentionally not registered.
+version: "1"
+
+project:
+  slug: atlas-club
+  name: Atlas Club
+  default_market: BR
+  default_currency: BRL
+
+products:
+  - { code: genesis-01, name: Genesis Turma 01, type: course }
+
+offers:
+  - code: genesis-01-standard
+    name: Genesis Turma 01
+    products: [genesis-01]
+    market: BR
+    currency: BRL
+    amount_minor: 49000
+    cadence: once
+    payment_methods: [PIX]
+    entitlements: ["atlas-club:genesis-01"]
+    status: active
+
+fulfillment:
+  - { entitlement: "atlas-club:genesis-01", type: web_access }

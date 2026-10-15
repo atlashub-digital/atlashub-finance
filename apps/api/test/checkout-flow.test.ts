@@ -329,7 +329,7 @@ describe.skipIf(!TEST_DATABASE_URL)("ARO checkout → payment → order → enti
       expect(noDoc.statusCode).toBe(422);
       expect(noDoc.json().error).toBe("INVALID_PAYER");
       expect((await createCheckout(h, checkoutBody({ payer: { name: "Xxx", email: "x@example.com", document: "123" } }))).json().error).toBe("INVALID_PAYER");
-      expect((await createCheckout(h, checkoutBody({ payment_method: "CARD" }))).json().error).toBe("NO_PAYMENT_ROUTE");
+      expect((await createCheckout(h, checkoutBody({ offer: "guia-bump", payment_method: "CARD" }))).json().error).toBe("NO_PAYMENT_ROUTE");
     });
 
     it("400 on schema violations and short Idempotency-Key", async () => {

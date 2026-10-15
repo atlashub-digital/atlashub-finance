@@ -20,6 +20,8 @@ import type { CreateCheckoutSessionRequest } from "./schema.js";
 
 type OfferRow = {
   id: string;
+  cadence: "once" | "month" | "year";
+  paymentMethods: string[];
   slug: string;
   title: string;
   entitlementKeys: string[];
@@ -77,7 +79,8 @@ const PROVIDER_FAILURE_STATUS: Record<string, number> = { PROVIDER_UNAVAILABLE: 
 
 async function loadOffer(db: Db, projectId: string, slug: string) {
   const [row] = await db<OfferRow[]>`
-    SELECT o.id, o.slug, o.title, o."entitlementKeys", p."productId", p."amountMinor", p.currency, p.market
+    SELECT o.id, o.slug, o.title, o."entitlementKeys", o.cadence, o."paymentMethods",
+           p."productId", p."amountMinor", p.currency, p.market
     FROM aro_offer o JOIN catalog_price p ON p.id = o."priceId"
     WHERE o."projectId" = ${projectId} AND o.slug = ${slug} AND o.status = 'active'
       AND p.status = 'active' AND p."amountMinor" IS NOT NULL`;
@@ -152,6 +155,11 @@ export class CheckoutService {
     for (const o of offers) {
       if (o.currency !== input.currency) fail("INVALID_OFFER", `Offer ${o.slug} is not sold in ${input.currency}`);
       if (o.market !== "*" && o.market !== input.market) fail("INVALID_OFFER", `Offer ${o.slug} is not sold in market ${input.market}`);
+      if (o.paymentMethods.length && !o.paymentMethods.includes(input.payment_method)) {
+        fail("INVALID_OFFER", `Offer ${o.slug} is not sold with ${input.payment_method}`);
+      }
+      // Recurring billing (subscriptions) is not part of ARO V1.
+      if (o.cadence !== "once") fail("INVALID_OFFER", `Offer ${o.slug} is recurring; recurring checkout is not available in V1`);
     }
     const amountMinor = offers.reduce((sum, o) => sum + o.amountMinor, 0);
 

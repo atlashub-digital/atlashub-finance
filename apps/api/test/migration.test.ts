@@ -24,7 +24,7 @@ describe.skipIf(!TEST_DATABASE_URL)("ARO additive migration on AtlasHub substrat
     const rows = await sql<{ relname: string; rls: boolean }[]>`
       SELECT relname, relrowsecurity AS rls FROM pg_class
       WHERE relkind = 'r' AND relname LIKE 'aro\\_%' AND relname <> 'aro_schema_migrations'`;
-    expect(rows.length).toBe(11);
+    expect(rows.length).toBe(13);
     expect(rows.every((r) => r.rls)).toBe(true);
     const policies = await sql<{ roles: string }[]>`
       SELECT roles::text AS roles FROM pg_policies WHERE tablename LIKE 'aro\\_%'`;

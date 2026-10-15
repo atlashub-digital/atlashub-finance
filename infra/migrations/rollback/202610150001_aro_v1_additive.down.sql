@@ -5,7 +5,8 @@
 BEGIN;
 
 DROP TABLE IF EXISTS aro_webhook_delivery, aro_outbound_event, aro_refund, aro_payment_attempt,
-  aro_order_item, aro_checkout_session, aro_payment_route, aro_provider_account, aro_offer,
+  aro_order_item, aro_checkout_session, aro_payment_route, aro_provider_account,
+  aro_fulfillment_rule, aro_offer, aro_catalog_revision,
   aro_api_key, aro_project_config;
 
 DO $$

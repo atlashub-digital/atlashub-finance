@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { buildApp } from "../../src/app.js";
-import { applyProjectManifest, applyProviderManifest, issueApiKey } from "../../src/admin/manifests.js";
+import { syncProject } from "../../src/admin/catalog.js";
+import { applyProviderManifest, issueApiKey } from "../../src/admin/manifests.js";
 import { createSql, type Sql } from "../../src/db/client.js";
 import { loadEnv } from "../../src/env.js";
 import { MisticPayAdapter } from "../../src/providers/misticpay/adapter.js";
@@ -35,28 +36,38 @@ export const PROVIDERS = {
   ],
 };
 
-export const ESPELHOMEU = {
+export const ESPELHOMEU_CONFIG = {
   tenant: "atlashub",
   project: {
     slug: "espelhomeu",
-    name: "EspelhoMeu",
     allowed_origins: ["https://espelho.lia.doctor"],
     webhook_url: "https://espelho.lia.doctor/api/aro/webhook",
     webhook_secret_ref: "aro/espelhomeu/webhook",
   },
+};
+
+/** Test catalog in the canonical aro.project.yaml shape (adds EUR/CARD and a bump offer). */
+export const ESPELHOMEU_MANIFEST = {
+  version: "1",
+  project: { slug: "espelhomeu", name: "EspelhoMeu", default_market: "BR", default_currency: "BRL" },
+  products: ["p01", "p02", "p03", "p04", "p05", "guia"].map((code) => ({ code, name: `EspelhoMeu ${code}`, type: "ebook" })),
   offers: [
-    { slug: "p01-br", title: "EspelhoMeu P01", amount_minor: 1190, currency: "BRL", market: "BR", entitlements: ["espelhomeu:p01"] },
+    { code: "p01-br", name: "EspelhoMeu P01", products: ["p01"], market: "BR", currency: "BRL", amount_minor: 1190, cadence: "once", payment_methods: ["PIX"], entitlements: ["espelhomeu:p01"] },
     {
-      slug: "colecao-br",
-      title: "EspelhoMeu Coleção",
-      amount_minor: 4990,
-      currency: "BRL",
+      code: "colecao-br",
+      name: "EspelhoMeu Coleção",
+      products: ["p01", "p02", "p03", "p04", "p05"],
       market: "BR",
+      currency: "BRL",
+      amount_minor: 4990,
+      cadence: "once",
       entitlements: ["espelhomeu:p01", "espelhomeu:p02", "espelhomeu:p03", "espelhomeu:p04", "espelhomeu:p05"],
     },
-    { slug: "p01-eu", title: "EspelhoMeu P01 (EU)", amount_minor: 500, currency: "EUR", market: "EU", entitlements: ["espelhomeu:p01"] },
-    { slug: "guia-bump", title: "Guia bónus", amount_minor: 900, currency: "BRL", market: "BR", entitlements: ["espelhomeu:guia"] },
+    { code: "p01-eu", name: "EspelhoMeu P01 (EU)", products: ["p01"], market: "EU", currency: "EUR", amount_minor: 500, cadence: "once", payment_methods: ["CARD"], entitlements: ["espelhomeu:p01"] },
+    { code: "guia-bump", name: "Guia bónus", products: ["guia"], market: "BR", currency: "BRL", amount_minor: 900, cadence: "once", entitlements: ["espelhomeu:guia"] },
+    { code: "clube-mensal", name: "Clube mensal", products: ["guia"], market: "BR", currency: "BRL", amount_minor: 1500, cadence: "month", entitlements: ["espelhomeu:clube"] },
   ],
+  fulfillment: [{ entitlement: "espelhomeu:p01", type: "web_access" }],
 };
 
 export const VALID_CPF = "529.982.247-25";
@@ -66,7 +77,7 @@ export async function makeHarness() {
   const db = await freshDatabase();
   await db.sql`INSERT INTO "Tenant" (id, slug, name) VALUES ('tenant-atlashub', 'atlashub', 'AtlasHub')`;
   await applyProviderManifest(db.sql, PROVIDERS);
-  await applyProjectManifest(db.sql, ESPELHOMEU);
+  await syncProject(db.sql, ESPELHOMEU_CONFIG, ESPELHOMEU_MANIFEST, "test");
   const publicKey = await issueApiKey(db.sql, "espelhomeu", "public");
   const serverKey = await issueApiKey(db.sql, "espelhomeu", "server");
 

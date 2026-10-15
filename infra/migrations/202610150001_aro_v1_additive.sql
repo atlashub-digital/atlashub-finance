@@ -142,10 +142,42 @@ CREATE TABLE IF NOT EXISTS aro_offer (
   "priceId"          text NOT NULL REFERENCES catalog_price(id),
   title              text NOT NULL,
   "entitlementKeys"  text[] NOT NULL DEFAULT '{}',
+  -- Catalog-first manifest fields (schemas/project-commerce-manifest.schema.json).
+  "productIds"       text[] NOT NULL DEFAULT '{}',
+  cadence            text NOT NULL DEFAULT 'once' CHECK (cadence IN ('once','month','year')),
+  "paymentMethods"   text[] NOT NULL DEFAULT '{}',   -- empty = any routed method
+  metadata           jsonb NOT NULL DEFAULT '{}',
+  "catalogRevisionId" text,
   status             text NOT NULL DEFAULT 'active' CHECK (status IN ('draft','active','retired')),
   "createdAt"        timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT aro_offer_project_slug_key UNIQUE ("projectId", slug)
 );
+
+-- 2.3b Catalog revisions: every synced aro.project.yaml, verbatim, for
+-- versioning and audit of product/offer/entitlement/fulfillment mappings.
+CREATE TABLE IF NOT EXISTS aro_catalog_revision (
+  id                text PRIMARY KEY,
+  "tenantId"        text NOT NULL,
+  "projectId"       text NOT NULL REFERENCES aro_project_config("projectId"),
+  "manifestSha256"  text NOT NULL,
+  manifest          jsonb NOT NULL,
+  "appliedBy"       text NOT NULL,
+  "appliedAt"       timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS aro_catalog_revision_project_idx ON aro_catalog_revision ("projectId", "appliedAt");
+
+-- 2.3c Fulfillment mapping (entitlement → action). Informational for project
+-- automations; never part of payment authority.
+CREATE TABLE IF NOT EXISTS aro_fulfillment_rule (
+  id                   text PRIMARY KEY,
+  "projectId"          text NOT NULL REFERENCES aro_project_config("projectId"),
+  "entitlementKey"     text NOT NULL,
+  type                 text NOT NULL CHECK (type IN ('web_access','telegram','whatsapp','download','external','none')),
+  target               text,
+  metadata             jsonb NOT NULL DEFAULT '{}',
+  "catalogRevisionId"  text NOT NULL REFERENCES aro_catalog_revision(id)
+);
+CREATE INDEX IF NOT EXISTS aro_fulfillment_rule_project_idx ON aro_fulfillment_rule ("projectId", "entitlementKey");
 
 -- 2.4 Provider accounts. credentialRef points to the secret store; never a secret.
 CREATE TABLE IF NOT EXISTS aro_provider_account (
@@ -326,7 +358,8 @@ DO $$
 DECLARE t text;
 BEGIN
   FOREACH t IN ARRAY ARRAY[
-    'aro_project_config','aro_api_key','aro_offer','aro_provider_account','aro_payment_route',
+    'aro_project_config','aro_api_key','aro_offer','aro_catalog_revision','aro_fulfillment_rule',
+    'aro_provider_account','aro_payment_route',
     'aro_checkout_session','aro_order_item','aro_payment_attempt','aro_refund',
     'aro_outbound_event','aro_webhook_delivery'
   ] LOOP

@@ -32,13 +32,15 @@ The subset of live DDL ARO depends on is reproduced as a test fixture in `infra/
 
 ## 3. Additive gap (migration `infra/migrations/202610150001_aro_v1_additive.sql`)
 
-New tables (all RLS-enabled, policy only for `aro_runtime`):
+New tables (13, all RLS-enabled, policy only for `aro_runtime`):
 
 | Table | Purpose |
 |---|---|
 | `aro_project_config` | slug, allowed origins, outbound webhook URL + secret ref, default market/currency |
 | `aro_api_key` | public / server project keys (SHA-256 hash only, rotatable) |
-| `aro_offer` | project offer handle → `catalog_price`, entitlement keys |
+| `aro_offer` | project offer code → `catalog_price`, products, cadence, payment methods, entitlement keys |
+| `aro_catalog_revision` | every synced `aro.project.yaml`, verbatim (versioning + audit) |
+| `aro_fulfillment_rule` | entitlement → fulfillment action mapping (informational, not payment authority) |
 | `aro_provider_account` | provider, environment, `credentialRef` (never a secret) |
 | `aro_payment_route` | PRIORITY_FAILOVER routing rows |
 | `aro_checkout_session` | public checkout lifecycle, idempotency, attribution snapshot, payment instruction |

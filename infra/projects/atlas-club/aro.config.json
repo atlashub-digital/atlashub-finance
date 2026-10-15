@@ -1,0 +1,4 @@
+{
+  "tenant": "atlashub",
+  "project": { "slug": "atlas-club", "allowed_origins": [] }
+}

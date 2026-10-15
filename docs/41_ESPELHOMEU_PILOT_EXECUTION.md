@@ -16,6 +16,8 @@ ARO_WEBHOOK_SECRET=…           # verifies ARO → EspelhoMeu webhooks
 
 Changes in the EspelhoMeu repository (PR #30 successor):
 
+0. Adopt `aro.project.yaml` (copy of `infra/projects/espelhomeu/aro.project.yaml`) as the reviewed source of offers; ARO syncs it.
+
 1. Replace provider calls with `POST /v1/checkout-sessions` (see `examples/typescript/aro-checkout-client.ts`). Offer slugs: `p01-br` … `p05-br`, `colecao-br`. Send the payer CPF/CNPJ (PixGo requires it; the QR is locked to that document).
 2. Render the PIX QR from `payment.qr_payload` (unaltered) and show `payment.copy_paste`.
 3. Poll `GET /v1/checkout-sessions/{id}` with `X-ARO-Checkout-Secret`; render the normalized states only.

@@ -134,7 +134,7 @@ References:
 ```
 apps/api            Fastify API (Node 22, TypeScript, Zod, postgres.js)
 infra/migrations    reviewed additive SQL over the AtlasHub data plane
-infra/projects      provider + project manifests (offers, routes)
+infra/projects      provider routes + per-project aro.project.yaml / aro.config.json
 infra/docker        image + VPS compose fragment
 ```
 

@@ -13,7 +13,7 @@ Nothing in this document has been executed against production by Engineering.
 | Migration (reviewed before apply) | `infra/migrations/202610150001_aro_v1_additive.sql` — analysis in `docs/39` |
 | Migration rollback | `infra/migrations/rollback/202610150001_aro_v1_additive.down.sql` (only before real data) |
 | Provider accounts + routes | `infra/projects/atlashub.providers.json` |
-| Project manifests | `infra/projects/espelhomeu.json`, `atlas-club.json`, `levelab.json` (LeveLab blocked until priced) |
+| Project catalogs (catalog-first) | `infra/projects/<slug>/aro.project.yaml` (schema `schemas/project-commerce-manifest.schema.json`) + `aro.config.json` (tenant, origins, webhook). LeveLab blocked until priced |
 
 ## 2. Environment
 
@@ -59,7 +59,7 @@ A missing provider secret makes that provider fail as MISCONFIGURED at create ti
    docker run --rm -e DATABASE_URL="$OWNER_DSN" -v "$PWD/infra/projects:/m:ro" aro-api:<sha> \
      node dist/admin-cli.js apply-providers /m/atlashub.providers.json
    docker run --rm -e DATABASE_URL="$OWNER_DSN" -v "$PWD/infra/projects:/m:ro" aro-api:<sha> \
-     node dist/admin-cli.js apply-project /m/espelhomeu.json
+     node dist/admin-cli.js sync-project /m/espelhomeu/aro.config.json /m/espelhomeu/aro.project.yaml
    ```
 6. **Issue EspelhoMeu keys** (printed once; store in EspelhoMeu's secret store):
    ```bash
@@ -93,6 +93,7 @@ The first real-money step is the E7 pilot (`docs/41`).
   node dist/admin-cli.js replay-event <event-id>
   ```
 - **Provider incident**: set the account `status` to `disabled` in `atlashub.providers.json` and re-apply → routing skips it and fails over; no deploy needed.
+- **Price / offer change**: edit `aro.project.yaml`, review, `validate`, then `sync-project`. Each sync stores the manifest verbatim in `aro_catalog_revision`; a changed amount creates a new `catalog_price` row and retires the old one; offers removed from the manifest are retired, never deleted.
 - **Key rotation**: `issue-key` the new key, roll it to the project, then `revoke-key <prefix>`.
 - **Exceptions to watch** (`aro_payment_attempt."errorCode"`): `AMOUNT_MISMATCH` (provider paid a different amount; no grant), `DUPLICATE_PAYMENT` (two providers confirmed one order; refund one manually), `UNKNOWN` state older than a few minutes (ambiguous create not yet resolved).
 - **MisticPay MED (PIX special return)** events are recorded in `billing_webhook_event` with `normalizedType = PROVIDER_RISK_EVENT` and are not applied automatically in V1.

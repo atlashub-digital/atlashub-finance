@@ -1,0 +1,41 @@
+# EspelhoMeu desired commerce configuration (catalog-first).
+# Canonical home: the EspelhoMeu repo. Kept here for the pilot until that repo adopts it.
+# Prices: docs/13_ESPELHOMEU_PILOT.md. Jornada and Membership stay unregistered until fulfillment is ready.
+version: "1"
+
+project:
+  slug: espelhomeu
+  name: EspelhoMeu
+  default_market: BR
+  default_currency: BRL
+
+products:
+  - { code: p01, name: EspelhoMeu P01, type: ebook }
+  - { code: p02, name: EspelhoMeu P02, type: ebook }
+  - { code: p03, name: EspelhoMeu P03, type: ebook }
+  - { code: p04, name: EspelhoMeu P04, type: ebook }
+  - { code: p05, name: EspelhoMeu P05, type: ebook }
+
+offers:
+  - { code: p01-br, name: EspelhoMeu P01, products: [p01], market: BR, currency: BRL, amount_minor: 1190, cadence: once, payment_methods: [PIX], entitlements: ["espelhomeu:p01"], status: active }
+  - { code: p02-br, name: EspelhoMeu P02, products: [p02], market: BR, currency: BRL, amount_minor: 1990, cadence: once, payment_methods: [PIX], entitlements: ["espelhomeu:p02"], status: active }
+  - { code: p03-br, name: EspelhoMeu P03, products: [p03], market: BR, currency: BRL, amount_minor: 2990, cadence: once, payment_methods: [PIX], entitlements: ["espelhomeu:p03"], status: active }
+  - { code: p04-br, name: EspelhoMeu P04, products: [p04], market: BR, currency: BRL, amount_minor: 2490, cadence: once, payment_methods: [PIX], entitlements: ["espelhomeu:p04"], status: active }
+  - { code: p05-br, name: EspelhoMeu P05, products: [p05], market: BR, currency: BRL, amount_minor: 2990, cadence: once, payment_methods: [PIX], entitlements: ["espelhomeu:p05"], status: active }
+  - code: colecao-br
+    name: EspelhoMeu Coleção
+    products: [p01, p02, p03, p04, p05]
+    market: BR
+    currency: BRL
+    amount_minor: 7990
+    cadence: once
+    payment_methods: [PIX]
+    entitlements: ["espelhomeu:p01", "espelhomeu:p02", "espelhomeu:p03", "espelhomeu:p04", "espelhomeu:p05"]
+    status: active
+
+fulfillment:
+  - { entitlement: "espelhomeu:p01", type: web_access }
+  - { entitlement: "espelhomeu:p02", type: web_access }
+  - { entitlement: "espelhomeu:p03", type: web_access }
+  - { entitlement: "espelhomeu:p04", type: web_access }
+  - { entitlement: "espelhomeu:p05", type: web_access }
