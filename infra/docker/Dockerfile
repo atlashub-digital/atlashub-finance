@@ -15,7 +15,7 @@ COPY apps/api/package.json apps/api/
 RUN npm ci --omit=dev -w @aro/api --include-workspace-root=false
 
 FROM node:22-bookworm-slim
-ENV NODE_ENV=production PORT=8080
+ENV NODE_ENV=production PORT=8080 ARO_MIGRATIONS_DIR=/app/migrations
 WORKDIR /app
 COPY --from=deps /repo/node_modules ./node_modules
 COPY --from=build /repo/apps/api/dist ./dist
