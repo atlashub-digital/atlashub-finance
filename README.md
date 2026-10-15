@@ -102,3 +102,18 @@ Implementation must follow the versioned contracts:
 - [Backend Implementation Specification V1](./docs/37_BACKEND_IMPLEMENTATION_SPEC_V1.md)
 
 Projects integrate with ARO, not provider APIs.
+
+
+## Developer Integration Kit
+
+For project teams integrating ARO into a digital product, start here:
+
+- [Developer START HERE](./docs/developer/START_HERE.md)
+- [Integration Recipes](./docs/developer/INTEGRATION_RECIPES.md)
+- [Environment Matrix](./docs/developer/ENVIRONMENTS.md)
+- [Acceptance Checklist](./docs/developer/ACCEPTANCE_CHECKLIST.md)
+- [Project Handoff Template](./docs/developer/PROJECT_HANDOFF_TEMPLATE.md)
+- [Standard Team Message](./docs/developer/TEAM_MESSAGE.md)
+
+The OpenAPI remains the canonical API contract:
+- [ARO OpenAPI V1](./openapi/aro-v1.yaml)
