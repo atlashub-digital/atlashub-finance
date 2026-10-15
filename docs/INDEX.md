@@ -46,6 +46,10 @@
 42. [Backend Implementation Specification V1](./37_BACKEND_IMPLEMENTATION_SPEC_V1.md)
 43. [ADR-016 — Contract-first Implementation](./ADR-016_CONTRACT_FIRST_IMPLEMENTATION.md)
 44. [OpenAPI V1](../openapi/aro-v1.yaml)
+45. [Execution Board](./38_EXECUTION_BOARD.md)
+46. [Data Plane Gap Analysis (E2)](./39_ARO_DATA_PLANE_GAP_ANALYSIS.md)
+47. [Runtime Runbook (E6)](./40_ARO_RUNTIME_RUNBOOK.md)
+48. [EspelhoMeu Pilot Execution (E7)](./41_ESPELHOMEU_PILOT_EXECUTION.md)
 
 ## Documentation rule
 

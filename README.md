@@ -102,3 +102,23 @@ Implementation must follow the versioned contracts:
 - [Backend Implementation Specification V1](./docs/37_BACKEND_IMPLEMENTATION_SPEC_V1.md)
 
 Projects integrate with ARO, not provider APIs.
+
+
+## Runtime (ARO V1 backend)
+
+```
+apps/api            Fastify API (Node 22, TypeScript, Zod, postgres.js)
+infra/migrations    reviewed additive SQL over the AtlasHub data plane
+infra/projects      provider + project manifests (offers, routes)
+infra/docker        image + VPS compose fragment
+```
+
+Local development:
+
+```bash
+npm ci
+npm run openapi:validate && npm run typecheck && npm run build
+TEST_DATABASE_URL=postgres://postgres:postgres@localhost:5432/aro_test npm test
+```
+
+Operations: [Runtime Runbook](./docs/40_ARO_RUNTIME_RUNBOOK.md) · Data plane: [Gap Analysis](./docs/39_ARO_DATA_PLANE_GAP_ANALYSIS.md) · Pilot: [EspelhoMeu Execution](./docs/41_ESPELHOMEU_PILOT_EXECUTION.md)

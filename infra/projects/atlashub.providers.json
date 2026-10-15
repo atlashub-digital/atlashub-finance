@@ -1,0 +1,15 @@
+{
+  "$comment": "Tenant-wide provider accounts and default routes (docs/37 MVP routing). credential_ref names secrets provisioned by Infrastructure as ARO_SECRET_<REF>__<FIELD>; no secret values here.",
+  "tenant": "atlashub",
+  "accounts": [
+    { "id": "pixgo-main", "provider": "pixgo", "environment": "production", "credential_ref": "aro/atlashub/pixgo/prod" },
+    { "id": "misticpay-main", "provider": "misticpay", "environment": "production", "credential_ref": "aro/atlashub/misticpay/prod" },
+    { "id": "stripe-main", "provider": "stripe", "environment": "production", "credential_ref": "aro/atlashub/stripe/prod" }
+  ],
+  "routes": [
+    { "id": "br-brl-pix-pixgo", "market": "BR", "currency": "BRL", "method": "PIX", "account": "pixgo-main", "priority": 10 },
+    { "id": "br-brl-pix-misticpay", "market": "BR", "currency": "BRL", "method": "PIX", "account": "misticpay-main", "priority": 20 },
+    { "id": "intl-eur-card-stripe", "market": "*", "currency": "EUR", "method": "CARD", "account": "stripe-main", "priority": 10 },
+    { "id": "intl-usd-card-stripe", "market": "*", "currency": "USD", "method": "CARD", "account": "stripe-main", "priority": 10 }
+  ]
+}

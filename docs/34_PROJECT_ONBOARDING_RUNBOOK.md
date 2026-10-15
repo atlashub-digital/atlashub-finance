@@ -141,7 +141,7 @@ Project frontend sends:
 POST /v1/checkout-sessions
 ```
 
-Example request:
+Example request (field names per `openapi/aro-v1.yaml`, which is canonical):
 
 ```json
 {
@@ -149,11 +149,11 @@ Example request:
   "offer": "levelab-reset21-br",
   "market": "BR",
   "currency": "BRL",
-  "method": "PIX",
-  "customer": {
+  "payment_method": "PIX",
+  "payer": {
     "name": "...",
     "email": "...",
-    "tax_id": "..."
+    "document": "..."
   },
   "attribution": {
     "utm_source": "instagram",
@@ -166,11 +166,15 @@ ARO responds with a provider-independent checkout contract:
 
 ```json
 {
-  "checkout_session_id": "...",
+  "id": "...",
   "order_id": "...",
-  "status": "PENDING",
+  "project": "levelab",
+  "offer": "levelab-reset21-br",
+  "state": "PENDING",
+  "amount": { "amount_minor": 0, "currency": "BRL" },
+  "checkout_secret": "...",
   "payment": {
-    "method": "PIX",
+    "kind": "PIX",
     "copy_paste": "...",
     "qr_payload": "...",
     "expires_at": "..."
