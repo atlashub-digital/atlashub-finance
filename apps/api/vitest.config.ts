@@ -6,5 +6,8 @@ export default defineConfig({
     environment: "node",
     testTimeout: 20000,
     hookTimeout: 30000,
+    // Test files share one Postgres cluster; cluster-level roles (waas_runtime,
+    // aro_runtime) cannot be created concurrently, so files run sequentially.
+    fileParallelism: false,
   },
 });
