@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aro.atlashub.si/schemas/project-commerce-manifest.schema.json",
+  "title": "ARO Project Commerce Manifest",
+  "type": "object",
+  "required": [
+    "version",
+    "project",
+    "products",
+    "offers"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1"
+    },
+    "project": {
+      "type": "object",
+      "required": [
+        "slug",
+        "name"
+      ],
+      "properties": {
+        "slug": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{1,62}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "default_market": {
+          "type": "string"
+        },
+        "default_currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "products": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "name",
+          "type"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "ebook",
+              "course",
+              "community",
+              "membership",
+              "download",
+              "bundle",
+              "other"
+            ]
+          },
+          "metadata": {
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "offers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "name",
+          "products",
+          "market",
+          "currency",
+          "amount_minor",
+          "cadence",
+          "entitlements"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "products": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "market": {
+            "type": "string",
+            "minLength": 1
+          },
+          "currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          },
+          "amount_minor": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "cadence": {
+            "type": "string",
+            "enum": [
+              "once",
+              "month",
+              "year"
+            ]
+          },
+          "payment_methods": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "PIX",
+                "CARD"
+              ]
+            }
+          },
+          "entitlements": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "inactive",
+              "draft"
+            ]
+          },
+          "metadata": {
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "fulfillment": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "entitlement",
+          "type"
+        ],
+        "properties": {
+          "entitlement": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "web_access",
+              "telegram",
+              "whatsapp",
+              "download",
+              "external",
+              "none"
+            ]
+          },
+          "target": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
