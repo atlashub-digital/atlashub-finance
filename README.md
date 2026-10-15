@@ -90,3 +90,15 @@ Start with the canonical index:
 - [EspelhoMeu Pilot](./docs/13_ESPELHOMEU_PILOT.md)
 
 The repository is the source of truth for ARO architecture, contracts, provider adapters, operating procedures and decision records.
+
+
+## Engineering contracts
+
+Implementation must follow the versioned contracts:
+
+- [OpenAPI V1](./openapi/aro-v1.yaml)
+- [Project Integration Contract V1](./docs/35_PROJECT_INTEGRATION_CONTRACT_V1.md)
+- [Hermes Tool Contract V1](./docs/36_HERMES_TOOL_CONTRACT_V1.md)
+- [Backend Implementation Specification V1](./docs/37_BACKEND_IMPLEMENTATION_SPEC_V1.md)
+
+Projects integrate with ARO, not provider APIs.
