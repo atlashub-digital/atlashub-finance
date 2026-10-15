@@ -35,3 +35,10 @@
 
 ## ADR-012 — Fast launch
 **Decision:** do not block EspelhoMeu on full ARO platform completion. Implement minimum reusable core required for real sales, then generalize from transactions.
+
+
+## ADR-013 — Reuse AtlasHub data plane
+**Decision:** ARO will reuse the existing AtlasHub Tenant/Project, catalog, CRM, commerce and billing substrate. New database objects are additive orchestration/finance primitives only where a verified gap exists. The draft standalone `aro.*` schema is a reference model, not an executable production migration.
+
+## ADR-014 — Supabase migration discipline
+**Decision:** no ARO DDL is applied until the existing AtlasHub schema, RLS and project/tenant mapping are reviewed and the additive gap migration is explicit.
