@@ -32,6 +32,7 @@
 28. [Versioning & Change Management](./24_VERSIONING_CHANGE_MANAGEMENT.md)
 29. [LEGO Component Map](./25_LEGO_COMPONENT_MAP.md)
 30. [Provider Adapter Template](./providers/ADAPTER_TEMPLATE.md)
+31. [PiXBrasil Reuse Strategy](./26_PIXBRASIL_REUSE_STRATEGY.md)
 
 ## Documentation rule
 
