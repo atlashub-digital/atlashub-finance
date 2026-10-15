@@ -85,3 +85,19 @@ API supports IP allowlisting. Production ARO should use stable egress where prac
 ## References
 
 - https://app.misticpay.com/docs
+
+
+## Monetary field units
+
+Current documentation uses different representations across endpoints:
+
+- create response: `transactionAmount` and `transactionFee` are integer minor-unit style values in the examples (e.g. amount R$4,55 → 455; fee 23);
+- check/list/webhook: `value` and `fee` are documented as reais with decimal places (e.g. 1.12 and 0.31).
+
+The adapter must normalize both at the provider edge. Do not let these units leak into ARO canonical money fields.
+
+## Payer document capability
+
+The cash-in documentation specifies payer CPF for `payerDocument`.
+
+Do not assume CNPJ support for MisticPay cash-in until verified on the account/API. ARO routing should treat payer-document capability as part of provider eligibility.
