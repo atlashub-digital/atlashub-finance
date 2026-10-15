@@ -52,3 +52,13 @@
 Architecture, contracts, provider assumptions, operating procedures and product decisions must be committed here before they become implicit runtime behavior.
 
 Chat messages are not a source of truth.
+
+
+## Developer integration
+
+- [Developer START HERE](./developer/START_HERE.md)
+- [Integration Recipes](./developer/INTEGRATION_RECIPES.md)
+- [Environments](./developer/ENVIRONMENTS.md)
+- [Acceptance Checklist](./developer/ACCEPTANCE_CHECKLIST.md)
+- [Project Handoff Template](./developer/PROJECT_HANDOFF_TEMPLATE.md)
+- [Standard Team Message](./developer/TEAM_MESSAGE.md)
