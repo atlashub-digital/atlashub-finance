@@ -1,6 +1,10 @@
 -- ARO — Atlas Revenue Operations
--- Canonical schema draft. REVIEW BEFORE APPLYING.
--- This file documents the intended V1 data plane; it is not an executed migration.
+-- REFERENCE MODEL ONLY — DO NOT APPLY AS-IS.
+-- The live AtlasHub Supabase already contains overlapping Tenant/Project,
+-- catalog_*, crm_*, commerce_* and billing_* domains.
+-- Production ARO DDL must be additive and derived from
+-- docs/19_ATLASHUB_SUPABASE_ALIGNMENT.md.
+-- This file is not an executed migration.
 
 create schema if not exists aro;
 
