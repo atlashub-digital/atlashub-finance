@@ -25,6 +25,7 @@ export function createSql(url: string, opts: { max?: number } = {}): Sql {
         },
       },
     },
+    connection: { TimeZone: "UTC" },
     onnotice: () => {},
   });
 }
