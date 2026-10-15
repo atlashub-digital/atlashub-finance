@@ -24,6 +24,7 @@
 20. [Atlas Workforce Revenue Module](./16_ATLAS_WORKFORCE_REVENUE_MODULE.md)
 21. [Provider Onboarding Checklist](./17_PROVIDER_ONBOARDING_CHECKLIST.md)
 22. [Glossary](./18_GLOSSARY.md)
+23. [AtlasHub Supabase Alignment](./19_ATLASHUB_SUPABASE_ALIGNMENT.md)
 
 ## Documentation rule
 
