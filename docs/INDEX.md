@@ -25,6 +25,13 @@
 21. [Provider Onboarding Checklist](./17_PROVIDER_ONBOARDING_CHECKLIST.md)
 22. [Glossary](./18_GLOSSARY.md)
 23. [AtlasHub Supabase Alignment](./19_ATLASHUB_SUPABASE_ALIGNMENT.md)
+24. [Integration Playbook](./20_INTEGRATION_PLAYBOOK.md)
+25. [Testing & Release Gates](./21_TESTING_AND_RELEASE_GATES.md)
+26. [Observability & SLOs](./22_OBSERVABILITY_AND_SLOS.md)
+27. [Data Retention & Privacy](./23_DATA_RETENTION_PRIVACY.md)
+28. [Versioning & Change Management](./24_VERSIONING_CHANGE_MANAGEMENT.md)
+29. [LEGO Component Map](./25_LEGO_COMPONENT_MAP.md)
+30. [Provider Adapter Template](./providers/ADAPTER_TEMPLATE.md)
 
 ## Documentation rule
 
