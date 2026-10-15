@@ -117,3 +117,14 @@ For project teams integrating ARO into a digital product, start here:
 
 The OpenAPI remains the canonical API contract:
 - [ARO OpenAPI V1](./openapi/aro-v1.yaml)
+
+
+### Catalog-first project bootstrap
+
+New digital projects should use a versioned `aro.project.yaml` manifest.
+
+References:
+- [Project Commerce Bootstrap](./docs/developer/PROJECT_COMMERCE_BOOTSTRAP.md)
+- [Manifest Schema](./schemas/project-commerce-manifest.schema.json)
+- [Training Platform Example](./examples/manifests/training-platform.yaml)
+- [Telegram Fulfillment](./docs/developer/FULFILLMENT_TELEGRAM.md)

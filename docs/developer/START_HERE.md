@@ -155,3 +155,14 @@ Read:
 
 Then fill:
 - `PROJECT_HANDOFF_TEMPLATE.md`
+
+
+## New project: catalog from day zero
+
+For a brand-new project, read next:
+
+- [Project Commerce Bootstrap](./PROJECT_COMMERCE_BOOTSTRAP.md)
+- [Telegram Fulfillment Recipe](./FULFILLMENT_TELEGRAM.md) when applicable
+- [Standard New Project Instruction](./NEW_PROJECT_INSTRUCTION.md)
+
+Create `aro.project.yaml` using the manifest schema and examples before implementing checkout.
