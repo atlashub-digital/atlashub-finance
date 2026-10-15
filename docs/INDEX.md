@@ -56,3 +56,22 @@
 Architecture, contracts, provider assumptions, operating procedures and product decisions must be committed here before they become implicit runtime behavior.
 
 Chat messages are not a source of truth.
+
+
+## Developer integration
+
+- [Developer START HERE](./developer/START_HERE.md)
+- [Integration Recipes](./developer/INTEGRATION_RECIPES.md)
+- [Environments](./developer/ENVIRONMENTS.md)
+- [Acceptance Checklist](./developer/ACCEPTANCE_CHECKLIST.md)
+- [Project Handoff Template](./developer/PROJECT_HANDOFF_TEMPLATE.md)
+- [Standard Team Message](./developer/TEAM_MESSAGE.md)
+
+
+### Catalog-first project bootstrap
+
+- [Project Commerce Bootstrap](./developer/PROJECT_COMMERCE_BOOTSTRAP.md)
+- [Telegram Fulfillment](./developer/FULFILLMENT_TELEGRAM.md)
+- [Standard New Project Instruction](./developer/NEW_PROJECT_INSTRUCTION.md)
+- [Manifest Schema](../schemas/project-commerce-manifest.schema.json)
+- [Training Platform Example](../examples/manifests/training-platform.yaml)

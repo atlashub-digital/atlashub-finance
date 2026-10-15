@@ -104,6 +104,31 @@ Implementation must follow the versioned contracts:
 Projects integrate with ARO, not provider APIs.
 
 
+## Developer Integration Kit
+
+For project teams integrating ARO into a digital product, start here:
+
+- [Developer START HERE](./docs/developer/START_HERE.md)
+- [Integration Recipes](./docs/developer/INTEGRATION_RECIPES.md)
+- [Environment Matrix](./docs/developer/ENVIRONMENTS.md)
+- [Acceptance Checklist](./docs/developer/ACCEPTANCE_CHECKLIST.md)
+- [Project Handoff Template](./docs/developer/PROJECT_HANDOFF_TEMPLATE.md)
+- [Standard Team Message](./docs/developer/TEAM_MESSAGE.md)
+
+The OpenAPI remains the canonical API contract:
+- [ARO OpenAPI V1](./openapi/aro-v1.yaml)
+
+
+### Catalog-first project bootstrap
+
+New digital projects should use a versioned `aro.project.yaml` manifest.
+
+References:
+- [Project Commerce Bootstrap](./docs/developer/PROJECT_COMMERCE_BOOTSTRAP.md)
+- [Manifest Schema](./schemas/project-commerce-manifest.schema.json)
+- [Training Platform Example](./examples/manifests/training-platform.yaml)
+- [Telegram Fulfillment](./docs/developer/FULFILLMENT_TELEGRAM.md)
+
 ## Runtime (ARO V1 backend)
 
 ```
