@@ -97,11 +97,19 @@ export class MisticPayAdapter implements PaymentProviderAdapter {
       expiresAt,
       instruction: { kind: "PIX" as const, copy_paste: copyPaste, qr_payload: copyPaste, expires_at: expiresAt },
     } satisfies ProviderPaymentSnapshot;
-    // Create response amounts are integer minor units.
+    // Create response amounts: docs dizem integer minor, mas o LIVE já devolveu reais com
+    // decimais (ex. fee "0.5" = R$0,50). Normalizar por valor: inteiro → minor direto;
+    // não inteiro → major (reais) → minor.
+    const normalizeAmount = (v: number): number | undefined => {
+      if (!Number.isFinite(v)) return undefined;
+      return Number.isInteger(v) ? v : majorToMinor(v);
+    };
     return {
       ...snap,
-      ...(typeof data.transactionAmount === "number" ? { amountMinor: data.transactionAmount } : {}),
-      ...(typeof data.transactionFee === "number" ? { feeMinor: data.transactionFee } : {}),
+      ...(typeof data.transactionAmount === "number"
+        ? { amountMinor: normalizeAmount(data.transactionAmount) }
+        : {}),
+      ...(typeof data.transactionFee === "number" ? { feeMinor: normalizeAmount(data.transactionFee) } : {}),
     };
   }
 
