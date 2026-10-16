@@ -2,7 +2,7 @@
 
 The canonical contract is **[`openapi/aro-v1.yaml`](https://github.com/atlashub-digital/atlashub-finance/blob/main/openapi/aro-v1.yaml)** (OpenAPI 3.1). It is validated in CI on every change.
 
-> GitBook: add an OpenAPI block to this page using the raw URL of `openapi/aro-v1.yaml` on the release branch. Do not paste schemas into pages — they would drift.
+In GitBook the operations below are rendered live from the organization's OpenAPI spec `aro-v1`, which GitBook fetches from `openapi/aro-v1.yaml` on `main`. Do not paste schemas into pages — they would drift.
 
 ## Servers
 
@@ -26,6 +26,32 @@ The canonical contract is **[`openapi/aro-v1.yaml`](https://github.com/atlashub-
 | GET | `/v1/operator/projects/{project}/revenue/overview` | operator token | [Authentication](../integration/authentication.md) |
 
 Outbound (ARO → project): the `projectRevenueEvent` webhook — see [Webhooks](webhooks.md).
+
+## Operations (rendered by GitBook)
+
+{% openapi-operation spec="aro-v1" path="/health" method="get" %}
+[OpenAPI aro-v1](https://raw.githubusercontent.com/atlashub-digital/atlashub-finance/main/openapi/aro-v1.yaml)
+{% endopenapi-operation %}
+
+{% openapi-operation spec="aro-v1" path="/v1/checkout-sessions" method="post" %}
+[OpenAPI aro-v1](https://raw.githubusercontent.com/atlashub-digital/atlashub-finance/main/openapi/aro-v1.yaml)
+{% endopenapi-operation %}
+
+{% openapi-operation spec="aro-v1" path="/v1/checkout-sessions/{checkout_session_id}" method="get" %}
+[OpenAPI aro-v1](https://raw.githubusercontent.com/atlashub-digital/atlashub-finance/main/openapi/aro-v1.yaml)
+{% endopenapi-operation %}
+
+{% openapi-operation spec="aro-v1" path="/v1/orders/{order_id}" method="get" %}
+[OpenAPI aro-v1](https://raw.githubusercontent.com/atlashub-digital/atlashub-finance/main/openapi/aro-v1.yaml)
+{% endopenapi-operation %}
+
+{% openapi-operation spec="aro-v1" path="/v1/entitlements/resolve" method="post" %}
+[OpenAPI aro-v1](https://raw.githubusercontent.com/atlashub-digital/atlashub-finance/main/openapi/aro-v1.yaml)
+{% endopenapi-operation %}
+
+{% openapi-operation spec="aro-v1" path="/v1/operator/projects/{project}/revenue/overview" method="get" %}
+[OpenAPI aro-v1](https://raw.githubusercontent.com/atlashub-digital/atlashub-finance/main/openapi/aro-v1.yaml)
+{% endopenapi-operation %}
 
 ## Conventions
 

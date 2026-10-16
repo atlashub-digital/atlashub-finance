@@ -13,6 +13,13 @@
 | ARO Developer Handbook | `docs/handbook/` (`.gitbook.yaml`, `SUMMARY.md`) | project developers, partners, ARO operations | can be published |
 | ARO Engineering (internal) | `docs/` (`docs/.gitbook.yaml`, `docs/SUMMARY.md`) | AtlasHub engineering and infrastructure | internal only |
 
+## Current GitBook setup
+
+- Organization **AtlasHub** with two sites, both **unpublished** until approved:
+  - **ARO Developer Handbook** (visibility: public once published) — space "ARO Developer Handbook";
+  - **ARO Engineering (internal)** (visibility: share-link) — space "ARO Engineering (internal)".
+- OpenAPI spec **`aro-v1`** in the organization, sourced from `https://raw.githubusercontent.com/atlashub-digital/atlashub-finance/main/openapi/aro-v1.yaml`. Pages embed it with `{% openapi-operation spec="aro-v1" … %}` blocks; when the file changes on `main`, refresh the spec from the GitBook OpenAPI settings (or re-run the spec update via the GitBook API).
+
 ## Setting up Git Sync (one-time, GitBook admin)
 
 1. In each space, enable **GitHub Sync** with `atlashub-digital/atlashub-finance`.
