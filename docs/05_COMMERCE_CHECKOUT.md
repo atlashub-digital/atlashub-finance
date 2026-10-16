@@ -1,5 +1,8 @@
 # Commerce & Checkout
 
+> Background design note. The released checkout behavior is documented in [Checkout Sessions](./handbook/api/checkout-sessions.md).
+
+
 ## First-party principle
 
 The checkout belongs to the project experience (EspelhoMeu, LeveLab, etc.) but obtains commerce authority from ARO.

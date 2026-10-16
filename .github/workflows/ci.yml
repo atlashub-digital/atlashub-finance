@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main, feat/aro-v1-backend]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: aro_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/aro_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run openapi:validate
+      - run: npm run docs:check
+      - run: npm run typecheck
+      - run: npm run build
+      - run: npm test
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: build-test
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -f infra/docker/Dockerfile -t aro-api:ci .
+      - name: Smoke /health
+        run: |
+          docker run -d --name aro -e NODE_ENV=development -p 8080:8080 aro-api:ci
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8080/health && exit 0; sleep 1; done
+          docker logs aro; exit 1

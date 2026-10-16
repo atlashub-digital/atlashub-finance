@@ -1,0 +1,6 @@
+# GitBook Git Sync — "ARO Engineering (internal)" space. Do not publish publicly.
+# In GitBook, set this space's project directory to docs.
+root: ./
+structure:
+  readme: INDEX.md
+  summary: SUMMARY.md

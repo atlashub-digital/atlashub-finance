@@ -1,5 +1,8 @@
 # ARO Integration Playbook
 
+> **Superseded for project teams** by the [ARO Developer Handbook](./handbook/README.md). Kept as background; where it differs, the handbook and the OpenAPI win.
+
+
 ## Purpose
 
 Standard procedure for connecting an AtlasHub project to ARO without provider coupling.

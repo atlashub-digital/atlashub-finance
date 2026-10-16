@@ -127,6 +127,8 @@ This is not intended to replace a full sales CRM. It is the revenue-oriented cus
 
 ## 5. Supabase data plane
 
+> Superseded by ADR-013 / [docs/39](./39_ARO_DATA_PLANE_GAP_ANALYSIS.md): ARO does not create a separate `aro` schema. It reuses the AtlasHub public tables and adds `aro_*` orchestration tables. The list below is the original conceptual model.
+
 Recommended central Supabase schema:
 
 `aro`

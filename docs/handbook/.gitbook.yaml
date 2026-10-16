@@ -1,0 +1,6 @@
+# GitBook Git Sync — "ARO Developer Handbook" space (publishable).
+# In GitBook, set this space's project directory to docs/handbook.
+root: ./
+structure:
+  readme: README.md
+  summary: SUMMARY.md

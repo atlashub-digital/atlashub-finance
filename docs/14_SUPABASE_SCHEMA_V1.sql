@@ -1,3 +1,6 @@
+-- SUPERSEDED — ARCHITECTURAL REFERENCE ONLY. DO NOT APPLY.
+-- The production data plane is infra/migrations/ (see docs/39_ARO_DATA_PLANE_GAP_ANALYSIS.md, ADR-013).
+
 -- ARO — Atlas Revenue Operations
 -- REFERENCE MODEL ONLY — DO NOT APPLY AS-IS.
 -- The live AtlasHub Supabase already contains overlapping Tenant/Project,

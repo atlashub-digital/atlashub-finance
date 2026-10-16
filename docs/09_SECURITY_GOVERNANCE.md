@@ -41,7 +41,7 @@ Required:
 ## Database
 
 Recommended:
-- Supabase schema `aro`;
+- additive `aro_*` tables in the AtlasHub public schema (ADR-013), accessed only through the `aro_runtime` role;
 - service-role writes only from trusted backend;
 - RLS for operator/dashboard access;
 - immutable audit records;

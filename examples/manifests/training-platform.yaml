@@ -1,0 +1,83 @@
+version: "1"
+
+project:
+  slug: academia-x
+  name: Academia X
+  default_market: BR
+  default_currency: BRL
+
+products:
+  - code: course-a
+    name: Curso A
+    type: course
+
+  - code: course-b
+    name: Curso B
+    type: course
+
+  - code: course-c
+    name: Curso C
+    type: course
+
+offers:
+  - code: course-a-br
+    name: Curso A — Brasil
+    products:
+      - course-a
+    market: BR
+    currency: BRL
+    amount_minor: 3990
+    cadence: once
+    payment_methods:
+      - PIX
+    entitlements:
+      - academia-x:course:course-a
+      - academia-x:telegram:students
+    status: active
+
+  - code: course-b-br
+    name: Curso B — Brasil
+    products:
+      - course-b
+    market: BR
+    currency: BRL
+    amount_minor: 4990
+    cadence: once
+    payment_methods:
+      - PIX
+    entitlements:
+      - academia-x:course:course-b
+      - academia-x:telegram:students
+    status: active
+
+  - code: course-c-br
+    name: Curso C — Brasil
+    products:
+      - course-c
+    market: BR
+    currency: BRL
+    amount_minor: 3990
+    cadence: once
+    payment_methods:
+      - PIX
+    entitlements:
+      - academia-x:course:course-c
+      - academia-x:telegram:students
+    status: active
+
+fulfillment:
+  - entitlement: academia-x:course:course-a
+    type: web_access
+    target: /courses/course-a
+
+  - entitlement: academia-x:course:course-b
+    type: web_access
+    target: /courses/course-b
+
+  - entitlement: academia-x:course:course-c
+    type: web_access
+    target: /courses/course-c
+
+  - entitlement: academia-x:telegram:students
+    type: telegram
+    target: students-main
