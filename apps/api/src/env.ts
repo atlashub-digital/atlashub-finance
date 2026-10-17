@@ -19,6 +19,8 @@ export const EnvSchema = z.object({
   /** HS256 key for operator (Atlas WorkForce / Hermes) tokens. */
   ARO_OPERATOR_JWT_SECRET: z.string().min(32).optional(),
   ARO_WORKER_ENABLED: bool.default(true),
+  /** Checkout hospedado opt-in, sem ativação financeira no deploy do código. */
+  ARO_HOSTED_CHECKOUT_ENABLED: bool.default(false),
   ARO_CHECKOUT_RATE_LIMIT_PER_MIN: z.coerce.number().int().min(1).default(30),
 });
 
