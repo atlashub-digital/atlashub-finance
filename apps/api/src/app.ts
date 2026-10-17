@@ -48,6 +48,8 @@ export function buildApp(deps: AppDeps) {
     },
     requestIdHeader: false,
     bodyLimit: 256 * 1024,
+    // Hosted Checkout AES-GCM opaque link token (>100 chars). Route validates max 2048.
+    maxParamLength: 2048,
     trustProxy: true,
   });
 
