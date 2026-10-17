@@ -115,7 +115,7 @@ export function buildApp(deps: AppDeps) {
       }),
     });
     app.register(v1Routes, { ctx });
-    app.register(hostedCheckoutRoutes, { ctx });
+    if (deps.env.ARO_HOSTED_CHECKOUT_ENABLED) app.register(hostedCheckoutRoutes, { ctx });
   }
 
   return Object.assign(app, { aro: ctx });
