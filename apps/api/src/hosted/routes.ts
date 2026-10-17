@@ -149,6 +149,6 @@ export async function hostedCheckoutRoutes(app: FastifyInstance, opts: {ctx:AroC
     const session=await engine.loadSession(req.params.id);
     if(session.projectId!==found.project.projectId||session.offerSlug!==found.offer.slug)
       return reply.status(404).send({error:"NOT_FOUND"});
-    return reply.send(await qrView(engine.view(session)));
+    return reply.send(await qrView(await engine.view(session)));
   });
 }
