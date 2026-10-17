@@ -253,6 +253,42 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
 
+  /v1/operator/projects/{project}/operations/p0:
+    get:
+      tags: [Operator]
+      operationId: getProjectOperationsP0
+      summary: Read-only project financial operations and exceptions snapshot for Hermes
+      description: |
+        Reports payment/order counts, pending/unknown attempts, webhook backlogs,
+        active route/key counts, and approved-volume/observed-fee aggregates.
+        Does not expose payer PII, keys, secrets or claim provider-settled balances.
+        Requires project-scoped revenue:read operator permission.
+      security:
+        - OperatorToken: []
+      parameters:
+        - $ref: "#/components/parameters/ProjectSlug"
+        - name: from
+          in: query
+          schema: {type: string, format: date-time}
+        - name: to
+          in: query
+          schema: {type: string, format: date-time}
+        - name: reporting_currency
+          in: query
+          schema: {type: string, pattern: "^[A-Z]{3}$"}
+      responses:
+        "200":
+          description: P0 read-only operational snapshot
+          content:
+            application/json:
+              schema: {type: object, additionalProperties: true}
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
   /v1/operator/projects/{project}/revenue/overview:
     get:
       tags: [Operator]
