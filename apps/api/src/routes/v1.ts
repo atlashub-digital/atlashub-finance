@@ -7,6 +7,7 @@ import { CreateCheckoutSessionRequest, IdempotencyKey } from "../modules/checkou
 import { CheckoutService } from "../modules/checkout/service.js";
 import { resolveEntitlements } from "../modules/entitlements/service.js";
 import { revenueOverview } from "../modules/operator/revenue.js";
+import { p0OperationsSnapshot } from "../modules/operator/p0.js";
 import { getOrder } from "../modules/orders/service.js";
 import { ingestProviderWebhook } from "../modules/payments/webhooks.js";
 import { findProjectBySlug, isOriginAllowedAnywhere } from "../modules/projects/repo.js";
@@ -145,6 +146,31 @@ export async function v1Routes(app: FastifyInstance, opts: { ctx: AroContext }) 
       .regex(/^[A-Z]{3}$/)
       .optional(),
   });
+  // Hermes P0: one read-only endpoint for daily finance, provider/webhook exceptions
+  // and onboarding diagnostics. No PII, no secrets, no live payment mutations.
+  app.get<{Params:{project:string}}>(
+    "/v1/operator/projects/:project/operations/p0",
+    async(req,reply) => {
+      const claims=verifyOperatorToken(ctx.keys.operatorJwt,bearer(req));
+      const slug=req.params.project;
+      if(!/^[a-z0-9][a-z0-9-]{1,62}$/.test(slug))
+        throw new AroError(400,"INVALID_REQUEST","Invalid project");
+      requireOperatorScope(claims,slug,"revenue:read");
+      const q=parseOr400(OverviewQuery,req.query);
+      const project=await findProjectBySlug(ctx.sql,slug);
+      if(!project)throw errors.notFound("Project not found");
+      const to=q.to?new Date(q.to):new Date();
+      const from=q.from?new Date(q.from):new Date(to.getTime()-86400_000);
+      if(from>=to || to.getTime()-from.getTime()>31*86400_000)
+        throw new AroError(400,"INVALID_REQUEST","Valid period up to 31 days required");
+      reply.header("cache-control","no-store");
+      return p0OperationsSnapshot(ctx.sql,{
+        projectId:project.projectId,slug,
+        from,to,currency:q.reporting_currency??project.defaultCurrency,
+      });
+    }
+  );
+
   app.get<{ Params: { project: string } }>("/v1/operator/projects/:project/revenue/overview", async (req) => {
     const claims = verifyOperatorToken(ctx.keys.operatorJwt, bearer(req));
     const slug = req.params.project;
