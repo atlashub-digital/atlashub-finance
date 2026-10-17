@@ -10,6 +10,7 @@
 ## Integration
 
 * [New Project Integration](integration/new-project.md)
+* [Universal Hosted Checkout](integration/hosted-checkout.md)
 * [Product & Offer Catalog](integration/catalog.md)
 * [Authentication & Project Keys](integration/authentication.md)
 * [Fulfillment Recipes](integration/fulfillment-recipes.md)
