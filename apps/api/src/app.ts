@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { hostedCheckoutRoutes } from "./hosted/routes.js";
 import rateLimit from "@fastify/rate-limit";
 import Fastify, { type FastifyServerOptions } from "fastify";
 import type { AroContext } from "./context.js";
@@ -112,6 +113,7 @@ export function buildApp(deps: AppDeps) {
       }),
     });
     app.register(v1Routes, { ctx });
+    app.register(hostedCheckoutRoutes, { ctx });
   }
 
   return Object.assign(app, { aro: ctx });
