@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { hostedCheckoutRoutes } from "./hosted/routes.js";
 import rateLimit from "@fastify/rate-limit";
 import Fastify, { type FastifyServerOptions } from "fastify";
 import type { AroContext } from "./context.js";
@@ -47,6 +48,8 @@ export function buildApp(deps: AppDeps) {
     },
     requestIdHeader: false,
     bodyLimit: 256 * 1024,
+    // Hosted Checkout AES-GCM opaque link token (>100 chars). Route validates max 2048.
+    maxParamLength: 2048,
     trustProxy: true,
   });
 
@@ -112,6 +115,7 @@ export function buildApp(deps: AppDeps) {
       }),
     });
     app.register(v1Routes, { ctx });
+    if (deps.env.ARO_HOSTED_CHECKOUT_ENABLED) app.register(hostedCheckoutRoutes, { ctx });
   }
 
   return Object.assign(app, { aro: ctx });

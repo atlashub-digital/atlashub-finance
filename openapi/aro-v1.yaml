@@ -44,6 +44,67 @@ paths:
               schema:
                 $ref: "#/components/schemas/HealthResponse"
 
+  /v1/checkout-links:
+    post:
+      tags: [Checkout]
+      operationId: createHostedCheckoutLink
+      summary: Create a reusable hosted PIX checkout link for a canonical active offer
+      description: |
+        Available when ARO_HOSTED_CHECKOUT_ENABLED is true.
+        Only a project-scoped SERVER key can create a link.
+        The amount and project are resolved by ARO's catalog, never set by the caller.
+        The opaque URL can be opened directly or framed from an authorized project origin.
+      security:
+        - ProjectServerKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [offer]
+              properties:
+                offer:
+                  type: string
+                  minLength: 1
+                  maxLength: 128
+                reference:
+                  type: string
+                  maxLength: 128
+                  pattern: "^[a-zA-Z0-9_.:-]*$"
+                expires_in_days:
+                  type: integer
+                  minimum: 1
+                  maximum: 30
+                  default: 30
+      responses:
+        "201":
+          description: Reusable opaque checkout link for the approved offer
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [project, offer, reference, amount, url, expires_at]
+                properties:
+                  project: {type: string}
+                  offer: {type: string}
+                  reference: {type: string}
+                  url: {type: string, format: uri}
+                  expires_at: {type: string, format: date-time}
+                  amount:
+                    type: object
+                    required: [amount_minor, currency]
+                    properties:
+                      amount_minor: {type: integer, minimum: 0}
+                      currency: {type: string, pattern: "^[A-Z]{3}$"}
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          $ref: "#/components/responses/Unprocessable"
+
   /v1/checkout-sessions:
     post:
       tags: [Checkout]
