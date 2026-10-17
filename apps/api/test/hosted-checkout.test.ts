@@ -16,7 +16,9 @@ describe("ARO hosted universal checkout — signed links and HTML", () => {
     expect(token).not.toContain("IG-001");
     expect(readHostedToken(token,secret)).toEqual(link);
     expect(readHostedToken(token,"this-is-another-secret-of-same-length-12345")).toBeNull();
-    expect(readHostedToken(token.replace(/.$/,"A"),secret)).toBeNull();
+    const parts = token.split(".");
+    parts[1] = (parts[1]!.startsWith("A") ? "B" : "A") + parts[1]!.slice(1);
+    expect(readHostedToken(parts.join("."),secret)).toBeNull();
     expect(readHostedToken(createHostedToken({...link, exp:Date.now()-5000},secret),secret)).toBeNull();
   });
   it("untrusted product title is HTML-escaped; no payer values in markup", () => {
