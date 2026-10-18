@@ -24,7 +24,7 @@ describe.skipIf(!TEST_DATABASE_URL)("ARO additive migration on AtlasHub substrat
     const rows = await sql<{ relname: string; rls: boolean }[]>`
       SELECT relname, relrowsecurity AS rls FROM pg_class
       WHERE relkind = 'r' AND relname LIKE 'aro\\_%' AND relname <> 'aro_schema_migrations'`;
-    expect(rows.length).toBe(13);
+    expect(rows.length).toBe(14);
     expect(rows.every((r) => r.rls)).toBe(true);
     const policies = await sql<{ roles: string }[]>`
       SELECT roles::text AS roles FROM pg_policies WHERE tablename LIKE 'aro\\_%'`;
@@ -38,6 +38,7 @@ describe.skipIf(!TEST_DATABASE_URL)("rollback script", () => {
     const { sql, drop } = await freshDatabase();
     try {
       const conn = await sql.reserve();
+      await conn.unsafe(await readFile(`${MIGRATIONS_DIR}/rollback/202610180001_hosted_claim.down.sql`, "utf8"));
       await conn.unsafe(
         await readFile(`${MIGRATIONS_DIR}/rollback/202610150001_aro_v1_additive.down.sql`, "utf8"),
       );
@@ -45,7 +46,7 @@ describe.skipIf(!TEST_DATABASE_URL)("rollback script", () => {
       const [row] = await sql<{ n: number }[]>`
         SELECT count(*)::int AS n FROM pg_class WHERE relkind = 'r' AND relname LIKE 'aro\\_%' AND relname <> 'aro_schema_migrations'`;
       expect(row?.n).toBe(0);
-      expect(await migrate(sql, MIGRATIONS_DIR)).toHaveLength(1);
+      expect(await migrate(sql, MIGRATIONS_DIR)).toHaveLength(2);
     } finally {
       await drop();
     }

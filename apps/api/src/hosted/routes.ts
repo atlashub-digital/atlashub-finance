@@ -136,6 +136,8 @@ export async function hostedCheckoutRoutes(app: FastifyInstance, opts: {ctx:AroC
       metadata:{source:"aro_checkout_link",...(found.link.reference?{reference:found.link.reference}:{}),
         marketing_opt_in:String(payer.marketing)},
     },"hosted:"+idem);
+    await ctx.sql`UPDATE aro_checkout_session SET "hostedClaimEligible" = true
+      WHERE id = ${created.view.id} AND "projectId" = ${found.project.projectId}`;
     return reply.status(201).send(await qrView(created.view));
   });
 

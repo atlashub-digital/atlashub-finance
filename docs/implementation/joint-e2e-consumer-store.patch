@@ -1,0 +1,13 @@
+diff --git a/apps/api/src/access/store.ts b/apps/api/src/access/store.ts
+index d1ed317..57214a9 100644
+--- a/apps/api/src/access/store.ts
++++ b/apps/api/src/access/store.ts
+@@ -17,7 +17,7 @@ export function postgresAccessStore(db: Db): AccessStore {
+         await sql`select pg_advisory_xact_lock(hashtextextended(${key}, 0))`;
+         const rows = await sql`select value from access_v1_records where key = ${key}`;
+         const { value, result } = await fn(rows[0]?.value ?? null);
+-        await sql`insert into access_v1_records (key, value, updated_at) values (${key}, ${JSON.stringify(value)}::jsonb, now()) on conflict (key) do update set value = excluded.value, updated_at = now()`;
++        await sql`insert into access_v1_records (key, value, updated_at) values (${key}, ${sql.json(JSON.parse(JSON.stringify(value)))}::jsonb, now()) on conflict (key) do update set value = excluded.value, updated_at = now()`;
+         return { result };
+       };
+       const active = context.getStore();
