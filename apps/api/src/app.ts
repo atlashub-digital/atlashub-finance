@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { hostedClaimRoutes } from "./hosted/claims.js";
 import { hostedCheckoutRoutes } from "./hosted/routes.js";
 import rateLimit from "@fastify/rate-limit";
 import Fastify, { type FastifyServerOptions } from "fastify";
@@ -115,7 +116,10 @@ export function buildApp(deps: AppDeps) {
       }),
     });
     app.register(v1Routes, { ctx });
-    if (deps.env.ARO_HOSTED_CHECKOUT_ENABLED) app.register(hostedCheckoutRoutes, { ctx });
+    if (deps.env.ARO_HOSTED_CHECKOUT_ENABLED) {
+      app.register(hostedCheckoutRoutes, { ctx });
+      if (deps.env.ARO_CLAIM_SERVER_KEY) app.register(hostedClaimRoutes, { ctx });
+    }
   }
 
   return Object.assign(app, { aro: ctx });

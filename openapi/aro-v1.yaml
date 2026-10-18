@@ -321,6 +321,83 @@ paths:
         "403":
           $ref: "#/components/responses/Forbidden"
 
+  /v1/checkout-sessions/{id}/claim-proof:
+    post:
+      tags:
+        - Checkout
+      operationId: issueHostedClaimProof
+      summary: Issue possession proof for an approved hosted checkout
+      description: "Opt-in: hosted checkout plus ARO_CLAIM_SERVER_KEY. HTTPS required; only test-mode
+        127.0.0.1 may use HTTP. offerId is the ARO offer UUID. See docs/implementation/claim-24.md."
+      security:
+        - CheckoutSecret: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: []
+              properties: {}
+      responses:
+        "200":
+          description: Short-lived claim; epoch millisecond timestamps, lifetime <=120 seconds.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HostedClaimProof"
+        "400":
+          description: Invalid request
+        "401":
+          description: Invalid or unregistered scoped key
+        "403":
+          description: Wrong scope, proof or HTTPS transport
+        "409":
+          description: Unapproved, reversed, inactive entitlement or consumed session
+        "429":
+          description: Rate limited
+  /v1/checkout-claims:
+    post:
+      tags:
+        - Checkout
+      operationId: exchangeHostedClaim
+      summary: Atomically consume one hosted session binding
+      description: "Opt-in: hosted checkout plus ARO_CLAIM_SERVER_KEY. HTTPS required; only test-mode
+        127.0.0.1 may use HTTP. offerId is the ARO offer UUID. See docs/implementation/claim-24.md."
+      security:
+        - ProjectServerKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HostedClaimRequest"
+      responses:
+        "200":
+          description: Short-lived claim; epoch millisecond timestamps, lifetime <=120 seconds.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HostedClaimResponse"
+        "400":
+          description: Invalid request
+        "401":
+          description: Invalid or unregistered scoped key
+        "403":
+          description: Wrong scope, proof or HTTPS transport
+        "409":
+          description: Unapproved, reversed, inactive entitlement or consumed session
+        "429":
+          description: Rate limited
+
 webhooks:
   projectRevenueEvent:
     post:
@@ -362,6 +439,7 @@ webhooks:
           description: Event acknowledged
         "204":
           description: Event acknowledged with no body
+
 
 components:
   securitySchemes:
@@ -790,3 +868,102 @@ components:
           type: string
         request_id:
           type: string
+
+    HostedClaimRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - project
+        - orderId
+        - checkoutSessionId
+        - offerId
+        - proof
+        - principalId
+      properties:
+        project:
+          type: string
+          minLength: 1
+        orderId:
+          type: string
+          format: uuid
+        checkoutSessionId:
+          type: string
+          format: uuid
+        offerId:
+          type: string
+          format: uuid
+        proof:
+          type: string
+          maxLength: 4096
+        principalId:
+          type: string
+          minLength: 1
+          maxLength: 128
+    HostedClaimProof:
+      type: object
+      additionalProperties: false
+      required:
+        - project
+        - orderId
+        - checkoutSessionId
+        - offerId
+        - proof
+        - issuedAt
+        - expiresAt
+      properties:
+        project: { type: string, minLength: 1 }
+        orderId: { type: string, format: uuid }
+        checkoutSessionId: { type: string, format: uuid }
+        offerId: { type: string, format: uuid }
+        proof:
+          type: string
+          minLength: 1
+        issuedAt:
+          type: integer
+          minimum: 0
+        expiresAt:
+          type: integer
+          minimum: 0
+    HostedClaimResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - project
+        - orderId
+        - checkoutSessionId
+        - offerId
+        - aroCustomerId
+        - principalId
+        - orderStatus
+        - entitlementStatus
+        - issuedAt
+        - expiresAt
+      properties:
+        project:
+          type: string
+          minLength: 1
+        orderId:
+          type: string
+          format: uuid
+        checkoutSessionId:
+          type: string
+          format: uuid
+        offerId:
+          type: string
+          format: uuid
+        aroCustomerId:
+          type: string
+          minLength: 1
+        principalId:
+          type: string
+          minLength: 1
+        orderStatus:
+          const: APPROVED
+        entitlementStatus:
+          const: ACTIVE
+        issuedAt:
+          type: integer
+          minimum: 0
+        expiresAt:
+          type: integer
+          minimum: 0

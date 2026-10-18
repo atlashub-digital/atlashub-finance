@@ -16,6 +16,8 @@ export const EnvSchema = z.object({
   ARO_PUBLIC_BASE_URL: z.string().url().default("http://localhost:8080"),
   /** HMAC key deriving per-session checkout secrets and request fingerprints. */
   ARO_CHECKOUT_SECRET_KEY: z.string().min(32).optional(),
+  /** Opt-in claim signing/authentication key; must be a registered project server key. */
+  ARO_CLAIM_SERVER_KEY: z.string().min(32).optional(),
   /** HS256 key for operator (Atlas WorkForce / Hermes) tokens. */
   ARO_OPERATOR_JWT_SECRET: z.string().min(32).optional(),
   ARO_WORKER_ENABLED: bool.default(true),

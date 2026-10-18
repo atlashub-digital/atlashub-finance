@@ -18,3 +18,10 @@ The project integration contract is normative and consists of:
 | Integration acceptance | [Production Checklist](./handbook/operations/production-checklist.md) |
 
 The previous long-form text of this document was moved into those pages so that each rule exists in exactly one place.
+
+## Hosted purchase claim (issue #24)
+
+The opt-in hosted possession proof and atomic backend exchange are specified in
+[Hosted checkout claim](./implementation/claim-24.md) and the additive OpenAPI paths.
+The project backend derives principalId from its authenticated session; it must
+never trust a browser-supplied principal or expose its server key.

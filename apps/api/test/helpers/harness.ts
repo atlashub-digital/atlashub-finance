@@ -101,6 +101,7 @@ export async function makeHarness() {
     ARO_OPERATOR_JWT_SECRET: "test-operator-jwt-secret-0123456789abcdef",
     ARO_CHECKOUT_RATE_LIMIT_PER_MIN: "10000",
     ARO_HOSTED_CHECKOUT_ENABLED: "true",
+    ARO_CLAIM_SERVER_KEY: serverKey,
   });
   const app = buildApp({
     env,
